@@ -1,0 +1,82 @@
+SQL uses CRUD operations...create,read,update,delete
+SQL comprises of DQL data query lang(select), DDL data def language(create,alter,rename,truncate,drop), DML data manipulation lang(insert,update,delete), 
+DCL data control lang(grant,revoke), TCL transaction control language(start,rollback,commit)
+
+
+CREATE DATABASE database_name;
+CREATE DATABASE IF NOT EXISTS database_name;
+DROP DATABASE database_name;
+DROP DATABASE IF NOT EXISTS database_name;
+USE database_name;
+SHOW DATABASES;
+SHOW TABLES;
+
+CREATE TABLE table_name(col1 datatype const);
+INSERT INTO table_name(col1,col2) VALUES(val1,val2);
+DESCRIBE table_name;
+
+SELECT * FROM table_name;
+
+ALTER TABLE table_name ADD col_name datatype constraint;
+ALTER TABLE table_name DROP col_name;
+
+CREATE TABLE table_name(
+id INT,
+name  VARCHAR(50),
+city VARCHAR(50),
+PRIMARY KEY(id,name)
+);
+
+CREATE TABLE table_name(
+id INT,
+name  VARCHAR(50),
+city VARCHAR(50),
+PRIMARY KEY(id,name)
+FOREIGN KEY(id) REFERENCES table_name2(corresponding_col_name)
+);
+
+CREATE TABLE table_name(
+id INT UNIQUE AUTO_INCREMENT,
+name  VARCHAR(50) NOT NULL,
+city VARCHAR(50) DEFAULT 'Delhi',
+PRIMARY KEY(id,name)
+);
+
+
+UPDATE table_name
+SET city = 'Chandigarh'
+WHERE city = 'Hyderabad';
+
+UPDATE table_name
+SET city = 'Chandigarh'
+WHERE id = 4 OR city = 'Kolkata';
+
+UPDATE table_name
+SET city = 'Chandigarh',name = 'Rishin'
+WHERE id = 3;
+diff kinds of operrations we got =, <>(not equals), > , < < >=, <=
+
+
+DELETE from table_name
+WHERE id = 4;
+
+INSERT INTO table_name VALUES(comma_seperated_values);
+joh characters hai unko '' iske andar likhna hai
+
+SELECT col1,col2 FROM table_name;
+SELECT * FROM table_name;
+SELECT TOP 5 * FROM table_name;
+
+SELECT DISTINCT(col_name) FROM table_name;
+
+
+
+
+
+tips
+-> char aur varchar mein yeh diff hai ki char poora memory jitna bola hai utna retain kar dega ....lekin varchar joh hai woh utna hi memory lega jitni zarurat hai...
+hence varchar is more memory efficient
+
+-> BLOB datatype ka matlab hai binary large objects
+-> Foreign Keys can have duplicate and null values
+-> constraints = NULL, NOT NULL, UNIQUE, PRIMARY KEY, DEFAULT,AUTO_INCREMENT
