@@ -70,6 +70,69 @@ SELECT TOP 5 * FROM table_name;
 SELECT DISTINCT(col_name) FROM table_name;
 
 
+CREATE TABLE city(
+ id INT PRIMARY KEY,
+ city VARCHAR(50),
+ age INT,
+ CONSTRAINT age_check CHECK (age >= 18 AND city = "Delhi")
+);
+
+CREATE TABLE newtab(
+ age INT CHECK(age >= 18)
+);
+
+SELECT * FROM student 
+WHERE marks BETWEEN 80 AND 90;
+
+SELECT * FROM student 
+WHERE city IN ("Delhi","Mumbai");
+
+SELECT * FROM student 
+WHERE city NOT IN ("Delhi","Mumbai");
+
+-> limit clause sets an upper limit on the number of rows(tuples) to be returned
+SELECT * FROM student 
+LIMIT 3;
+
+SELECT * FROM student 
+ORDER BY city ASC;
+
+-> if we want the data of top 3 students in class...so first by put it in decreasing order and then use limit clause to return the top 3 students
+SELECT * FROM student 
+ORDER BY marks DESC 
+LIMIT 3;
+
+-> aggregate functions ...count(),max(),min(),sum(),avg()
+
+-> count no of students in each city
+SELECT count(name),city
+FROM student
+GROUP BY city;
+
+SELECT count(name),city,name
+FROM student
+GROUP BY city;
+-> the above query is going to throw an error as name col is not specified in Group by clause
+
+-> write the query to find avg marks in each city in asc order
+SELECT city, AVG(marks) FROM student
+GROUP BY city 
+ORDER BY avg(marks) ASC;
+
+
+SELECT mode, count(mode)
+FROm table
+GROUP BY mode;
+
+SELECT count(name), city
+FROM student
+GROUP BY city
+HAVING max(marks) > 90;
+
+
+
+
+
 
 
 
