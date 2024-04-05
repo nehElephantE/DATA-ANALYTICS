@@ -129,8 +129,98 @@ FROM student
 GROUP BY city
 HAVING max(marks) > 90;
 
+-> cascading means if there is a change in the child table then the change must be reflected in the parent table as well
+CREATE TABLE table_name(
+ id INT PRIMARY KEY,
+ courseID INT,
+ FOREIGN KEY (courseID) REFERENCES table_name2(id)
+ ON DELETE CASCADE
+ ON UPDATE CASCADE
+);
 
 
+ALTER TABLE table_name
+ADD COLUMN column_name datatype constraints;
+
+ALTER TABLE table_name
+DROP COLUMN column_name;
+
+ALTER TABLE table_name
+RENAME TO new_table_name;
+
+ALTER TABLE table_name
+CHANGE old_name new_name new_datatype new_constraints;
+
+ALTER TABLE table_name
+MODIFY column_name new_datatype new_constraint;
+
+-> drop deletes the entire table but truncate deletes the data present in the table
+TRUNCATE TABLE table_name;
+
+
+-> joins
+SELECT columns
+FROM tableA
+INNER JOIN tableB
+ON tableA.col_name = tableB.col_name;
+
+SELECT columns
+FROM tableA
+LEFT JOIN tableB
+ON tableA.col_name = tableB.col_name;
+
+SELECT columns
+FROM tableA
+RIGHT JOIN tableB
+ON tableA.col_name = tableB.col_name;
+
+-> saare table ko poori tarah join karne ke 2 methods
+SELECT * FROM student AS a
+LEFT JOIN course AS b
+ON a.id = b.id
+UNION
+SELECT * FROM student AS a
+RIGHT JOIN course AS b
+ON a.id = b.id;
+
+SELECT * FROM a
+FULL OUTER JOIN b
+ON a.key = b.key;
+
+
+-> left exclusive join
+SELECT * FROM student AS a
+LEFT JOIN course AS B
+ON a.id = b.id
+WHERE b.id IS NULL;
+
+-> right exclusive join
+SELECT * FROM student AS a
+RIGHT JOIN course AS B
+ON a.id = b.id
+WHERE a.id IS NULL;
+
+-> full exclusive join
+SELECT * FROM a
+FULL OUTER JOIN b
+ON a.key = b.key
+WHERE a.key IS NULL OR b.key IS NULL;
+
+-> self join
+SELECT col
+FROM table_name AS a
+JOIN table_name AS b
+ON a.key = b.key;
+
+
+-> union removes duplicate values whereas union all keeps the duplicate values
+SELECT name FROM emp
+UNION
+SELECT name from emp;
+
+SELECT name FROM emp
+UNION ALL
+SELECT name from emp;
 
 
 
