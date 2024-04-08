@@ -69,6 +69,12 @@ SELECT TOP 5 * FROM table_name;
 
 SELECT DISTINCT(col_name) FROM table_name;
 
+SELECT * FROM emp 
+WHERE loc LIKE 'c%'
+
+SELECT * FROM emp 
+WHERE loc NOT LIKE '_ _ _c'
+
 
 CREATE TABLE city(
  id INT PRIMARY KEY,
@@ -221,6 +227,45 @@ SELECT name from emp;
 SELECT name FROM emp
 UNION ALL
 SELECT name from emp;
+
+-> subqueries...use the operation like between or in 
+-> find the employees whos salary is mor ethan the average salary
+SELECT * FROM employee 
+WHERE salary > (SELECT AVG(salary) FROM employee);
+
+or
+
+SELECT * FROM employee e
+JOIN (SELECT AVG(salary) sal FROM employee) avg_sal
+ON e.salary > avg_sal.sal;
+
+-> scalar subquery will return one row and 1 column
+-> multiple row subquery which returns ,ul col and mul rows or return 1 col and mul rows
+
+-> find the emp who earn the highest salary in each dept
+
+SELECT * FROM employee 
+WHERE (dept_name, salary) IN (SELECT dept_name, max(salary) FROM employee
+                             GROUP BY dept_name);
+
+-> find dept who do not have any employees
+SELECT * FROM department
+WHERE dept_name NOT IN (SELECT DISTINCT(dept_name) FROM employee);
+
+-> correlated subquery  
+
+
+-> views
+view is a viirtual table based on the result-set of an SQL statement
+
+CREATE VIEW view1 AS
+SELECT roll, name FROM student;
+
+SELECT * FROM view1;
+
+
+
+
 
 
 
