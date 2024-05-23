@@ -1,0 +1,45 @@
+##############
+Data Analysis
+is the process of inspecting, cleaning, transforming, and modeling data with the goal of discovering useful information, drawing conclusions, and supporting decision-making.
+
+**Key Activities:**
+- **Descriptive Statistics:** Summarizing and describing the features of a dataset.
+- **Data Cleaning:** Removing or correcting inaccuracies, duplicates, or irrelevant parts of the data.
+- **Exploratory Data Analysis (EDA):** Investigating data sets to find patterns, anomalies, and hypothesis testing.
+- **Visualization:** Creating charts, graphs, and other visual representations to illustrate data findings.
+
+**Objective:** The main objective is to understand the data, identify trends, and summarize the information.
+
+##############
+Data Analytics
+**Definition:** Data analytics refers to the science of analyzing raw data to make conclusions about that information. It encompasses a broader scope that includes various forms of analysis and techniques.
+
+**Key Activities:**
+- **Predictive Analytics:** Using statistical models and machine learning techniques to predict future outcomes based on historical data.
+- **Prescriptive Analytics:** Recommending actions you can take to affect desired outcomes using optimization and simulation algorithms.
+- **Diagnostic Analytics:** Understanding why something happened by examining data more deeply.
+- **Data Mining:** Discovering patterns in large datasets using database systems, machine learning, and statistical methods.
+
+**Objective:** The goal is to derive actionable insights, make predictions, and inform strategic decisions.
+
+
+#################
+DIFFERENCE BETWEEN BUSINESS INTELIGGENCE AND BUSINESS ANALYTICS
+
+Key Differences
+
+Objective:
+BI: Focuses on "what happened" and "what is happening" using historical data.
+BA: Focuses on "why it happened," "what will happen," and "what should we do about it" using statistical and predictive models.
+
+Timeframe:
+BI: Retrospective, analyzing past data.
+BA: Forward-looking, using data to predict and prescribe future actions.
+
+Data Analysis:
+BI: Emphasizes data visualization and reporting.
+BA: Emphasizes data modeling, statistical analysis, and machine learning.
+
+Decision-Making:
+BI: Supports tactical decision-making.
+BA: Supports strategic decision-making.
