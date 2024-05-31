@@ -1,0 +1,11 @@
+-> 5 V's - Volume, variety , velocity, varasity and value
+-> types of data - structured, semi-structured and un-structured
+
+
+##################
+RDBMS vs HADOOP
+
+rdbms fails when data is larger
+read is fast and write is slow in RDBMS
+license is needed for RDBMS
+cost and complexity is more is RDBMS
