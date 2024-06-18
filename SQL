@@ -135,24 +135,6 @@ FROM student
 GROUP BY city
 HAVING max(marks) > 90;
 
-
--> QUESTION
-Query the two cities in STATION with the shortest and longest CITY names, as well as their respective lengths 
-(i.e.: number of characters in the name). If there is more than one smallest or largest city, choose the one that
-comes first when ordered alphabetically.
-
-SELECT CITY, LENGTH(CITY)
-FROM STATION
-ORDER BY LENGTH(CITY) ASC, CITY ASC
-LIMIT 1;
-
-SELECT CITY, LENGTH(CITY)
-FROM STATION
-ORDER BY LENGTH(CITY) DESC, CITY ASC
-LIMIT 1;
-
-inplace of LIMIT 1 , one can also use FETCH FIRST ROW ONLY
-
 -> cascading means if there is a change in the child table then the change must be reflected in the parent table as well
 CREATE TABLE table_name(
  id INT PRIMARY KEY,
@@ -161,10 +143,6 @@ CREATE TABLE table_name(
  ON DELETE CASCADE
  ON UPDATE CASCADE
 );
-
-
-
-
 
 
 ALTER TABLE table_name
@@ -301,3 +279,38 @@ hence varchar is more memory efficient
 -> Foreign Keys can have duplicate and null values
 -> constraints = NULL, NOT NULL, UNIQUE, PRIMARY KEY, DEFAULT,AUTO_INCREMENT
 -> modulus - MOD(col_name, number)....example - MOD(ID,2)=0...means even ID
+
+-> Use WHERE instead of HAVING when filtering rows based on conditions related to columns (MARKS in this case). 
+HAVING is used with aggregate functions (like SUM, COUNT, AVG) in GROUP BY queries.
+
+
+
+-> QUESTION
+Query the two cities in STATION with the shortest and longest CITY names, as well as their respective lengths 
+(i.e.: number of characters in the name). If there is more than one smallest or largest city, choose the one that
+comes first when ordered alphabetically.
+
+SELECT CITY, LENGTH(CITY)
+FROM STATION
+ORDER BY LENGTH(CITY) ASC, CITY ASC
+LIMIT 1;
+
+SELECT CITY, LENGTH(CITY)
+FROM STATION
+ORDER BY LENGTH(CITY) DESC, CITY ASC
+LIMIT 1;
+
+inplace of LIMIT 1 , one can also use FETCH FIRST ROW ONLY
+pehle length se sort then alphabeticcaly sort isiliye order by ke baad ussi order mein mention karna imp
+
+
+-> QUESTION
+Query the list of CITY names ending with vowels (a, e, i, o, u) from STATION. Your result cannot contain duplicates.
+
+SELECT DISTINCT CITY
+FROM STATION
+WHERE RIGHT(CITY,1) IN ('A', 'E', 'I', 'O', 'U', 'a', 'e', 'i', 'o', 'u');
+
+
+right side se first character
+aise hi left bhi rehta ... use it for extraction
