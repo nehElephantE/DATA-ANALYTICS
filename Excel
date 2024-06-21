@@ -1,1 +1,54 @@
+###################
+TIPS
 
+-> excel adds col to the left of the selected col...toh joh col ko right click karke drop down mein insert choose kiya hai
+uske left side pe insert hogi col
+
+-> if u need to add more number of rows or col just select that many number of rows or col and then do right click and insert
+
+-> Woh cell range mein dollar symbol laane ke liye use F4
+
+###################
+UPPER AND LOWER CASE
+=LOWER(Mention the cell address which you want to change)
+=UPPER(Mention the cell address which you want to change)
+
+###################
+SELECTING ENTIRE ROWS OR COLS
+
+Click on the col name like E, D or whatever ......shortcut - Ctrl + SpaceBar
+Click on the row name like 3,4,6 or whatever......shortcut - Shift + SpaceBar
+
+If you want to select the entire col but only those cell having data then - Ctrl + Shift + Page Down
+If you want to select the entire row but only those cell having data then - Ctrl + Shift + Right/Left arrow Key
+
+
+##################
+CONDITIONAL FORMATTING
+
+Present under Home - Styles - Conditional Formatting
+Used to pass on a condition and then decide what to do with the cell
+
+-> comparing 2 cells
+=IF(Cell add 1 = Cell add 2, "Match","Not Mached")
+
+=VLOOKUP(lookup_value,table_array,col_index_number,range_lookup)
+VLOOKUP compares the lookup_value to the values of the col specified in the range specified
+
+=IFERROR(VLOOKUP(lookup_value,table_array,col_index_number,range_lookup),"Not Found")
+Using IFERROR we can specify that if element is not found what message can be printed
+
+If we need to compare Ford and Ford India , as both are same but it may give not found as answer so we use wildcard symbol - "*"
+=VLOOKUP(lookup_value&&"*",table_array,col_index_number,range_lookup)
+
+
+##################
+CONVERTING ROWS TO COLUMNS
+Ctrl+ C to copy while pasting go to "paste specials" option and then choose transpose
+or
+=TRANSPOSE(select_the_table_array)
+
+##################
+SELECTING EMPTY ROWS OR BLANK ROWS
+
+Home - Find and select - go to specials - blanks - delete
