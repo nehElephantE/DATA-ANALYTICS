@@ -256,13 +256,27 @@ WHERE dept_name NOT IN (SELECT DISTINCT(dept_name) FROM employee);
 
 
 -> views
-view is a viirtual table based on the result-set of an SQL statement
+view is a virtual table based on the result-set of an SQL statement
 
 CREATE VIEW view1 AS
 SELECT roll, name FROM student;
 
 SELECT * FROM view1;
 
+single table
+CREATE VIEW details AS
+SELECT name,add
+FROM students
+WHERE id < 18;
+
+multiple table
+CREATE VIEW details AS
+SELECT s.name,s.add,m.marks
+FROM students s, marks m
+WHERE s.id = m.id;
+
+dropping view
+DROP VIEW name;
 
 
 
