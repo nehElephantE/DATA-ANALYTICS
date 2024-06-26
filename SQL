@@ -297,7 +297,8 @@ hence varchar is more memory efficient
 -> Use WHERE instead of HAVING when filtering rows based on conditions related to columns (MARKS in this case). 
 HAVING is used with aggregate functions (like SUM, COUNT, AVG) in GROUP BY queries.
 
-
+-> Aggregate functions - SUM(),AVG(),DIFFERENCE().....yeh string ske liye hai, nos ke liye normal '-' sign
+REPLACE(), ROUND(), CEIL(),FLOOR()
 
 -> QUESTION
 Query the two cities in STATION with the shortest and longest CITY names, as well as their respective lengths 
