@@ -34,11 +34,112 @@ print(name[0:2])
 print(name[2:])
 // returns ha
 
+a = "hdjdljnidbvjldhvdvfbf"
+a[1:9:4]
+
+// from index position 1 to 9 i.e from [djdljnid]....only the 4th position would get printed....dj will be printed in the end
+
 // use len() function to find the length of the string
+
+###############
+PYTHON STRING FUNCTION
+
+**String Initialization and Concatenation:**
+   - `str()`: Converts an object into a string.
+   - `+` operator: Concatenates two strings.
+   - `*` operator: Repeats a string a specified number of times.
+
+**Accessing Characters:**
+   - `[]` indexing: Access individual characters in a string by index.
+   - `[:]` slicing: Extract a substring by specifying a range of indices
+.
+**Basic String Methods:**
+   - `str.capitalize()`: Returns a copy of the string with the first character capitalized and the rest lowercase.
+   - `str.lower()`: Returns a copy of the string converted to lowercase.
+   - `str.upper()`: Returns a copy of the string converted to uppercase.
+   - `str.title()`: Returns a titlecased version of the string (first character of each word capitalized, others lowercase).
+
+**Searching and Finding:**
+   - `str.find(substring)`: Returns the lowest index where the substring is found.
+   - `str.index(substring)`: Returns the lowest index where the substring is found (similar to `find` but raises ValueError if not found).
+   - `str.count(substring)`: Returns the number of non-overlapping occurrences of a substring in the string.
+
+**String Manipulation:**
+   - `str.replace(old, new)`: Returns a copy of the string with all occurrences of `old` replaced by `new`.
+   - `str.strip()`: Returns a copy of the string with leading and trailing whitespace removed.
+   - `str.lstrip()`: Returns a copy of the string with leading whitespace removed.
+   - `str.rstrip()`: Returns a copy of the string with trailing whitespace removed.
+
+ **Splitting and Joining:**
+   - `str.split(sep=None, maxsplit=-1)`: Splits the string into a list of substrings using `sep` as the delimiter.
+   - `str.join(iterable)`: Concatenates strings in an iterable with `str` as the separator.
+
+**Checking and Formatting:**
+   - `str.startswith(prefix)`: Returns `True` if the string starts with the specified prefix.
+   - `str.endswith(suffix)`: Returns `True` if the string ends with the specified suffix.
+   - `str.format()`: Formats the string into a nicer output (can include placeholders `{}`).
+
+ **Checking and Validation:**
+   - `str.isalpha()`: Returns `True` if all characters in the string are alphabetic.
+   - `str.isdigit()`: Returns `True` if all characters in the string are digits.
+   - `str.isalnum()`: Returns `True` if all characters in the string are alphanumeric.
+
+**Conversion and Encoding:**
+   - `str.encode(encoding='utf-8', errors='strict')`: Returns an encoded version of the string as bytes.
+   - `str.decode(encoding='utf-8', errors='strict')`: Decodes the bytes object into a string using the specified encoding.
+
+**Formatting:**
+    - `str.center(width[, fillchar])`: Returns a centered string of specified width.
+    - `str.ljust(width[, fillchar])`: Returns a left-justified string of specified width.
+    - `str.rjust(width[, fillchar])`: Returns a right-justified string of specified width.
 
 
 ###############
 LISTS
+
+# Create a list
+my_list = [1, 2, 3, 4, 5]
+
+# Adding elements
+my_list.append(6)
+print(my_list)  # Output: [1, 2, 3, 4, 5, 6]
+
+# Extending list
+my_list.extend([7, 8, 9])
+print(my_list)  # Output: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+# Inserting element
+my_list.insert(3, 10)
+print(my_list)  # Output: [1, 2, 3, 10, 4, 5, 6, 7, 8, 9]
+
+# Removing element
+my_list.remove(6)
+print(my_list)  # Output: [1, 2, 3, 10, 4, 5, 7, 8, 9]
+
+# Popping element
+popped_value = my_list.pop()
+print(popped_value)  # Output: 9
+print(my_list)       # Output: [1, 2, 3, 10, 4, 5, 7, 8]
+
+# Finding element
+index_of_3 = my_list.index(3)
+print(index_of_3)  # Output: 2
+
+# Counting occurrences
+count_of_4 = my_list.count(4)
+print(count_of_4)  # Output: 1
+
+# Sorting
+my_list.sort()
+print(my_list)  # Output: [1, 2, 3, 4, 5, 7, 8, 10]
+
+# Reversing
+my_list.reverse()
+print(my_list)  # Output: [10, 8, 7, 5, 4, 3, 2, 1]
+
+# Clearing list
+my_list.clear()
+print(my_list)  # Output: []
 
 
 //take user input for List and Nested List using For Loop and List Comprehension
@@ -145,4 +246,159 @@ print(l)
 
 
 for i in l:
-        print(*i)
+        print(*i
+
+
+####################
+TUPLES
+
+# Creating a tuple
+my_tuple = (1, 2, 3, 4, 5)
+
+# Accessing elements
+print(my_tuple[0])  # Output: 1
+print(my_tuple[-1])  # Output: 5
+print(my_tuple[1:4])  # Output: (2, 3, 4)
+
+# Concatenating tuples
+tuple1 = (1, 2, 3)
+tuple2 = (4, 5, 6)
+concatenated_tuple = tuple1 + tuple2
+print(concatenated_tuple)  # Output: (1, 2, 3, 4, 5, 6)
+
+# Repeating tuples
+repeated_tuple = tuple1 * 3
+print(repeated_tuple)  # Output: (1, 2, 3, 1, 2, 3, 1, 2, 3)
+
+# Length of tuple
+print(len(my_tuple))  # Output: 5
+
+# Checking membership
+print(2 in my_tuple)  # Output: True
+print(6 in my_tuple)  # Output: False
+
+# Counting occurrences
+count_of_3 = my_tuple.count(3)
+print(count_of_3)  # Output: 1
+
+# Finding index
+index_of_4 = my_tuple.index(4)
+print(index_of_4)  # Output: 3
+
+# Tuple packing and unpacking
+packed_tuple = 1, 2, 3
+a, b, c = packed_tuple
+print(a, b, c)  # Output: 1 2 3
+
+
+####################
+DICTIONARY
+
+# Creating a dictionary
+my_dict = {'name': 'John', 'age': 30, 'city': 'New York'}
+
+# Accessing elements
+print(my_dict['name'])  # Output: John
+print(my_dict.get('age'))  # Output: 30
+
+# Modifying elements
+my_dict['city'] = 'San Francisco'
+print(my_dict)  # Output: {'name': 'John', 'age': 30, 'city': 'San Francisco'}
+
+# Adding elements
+my_dict['gender'] = 'Male'
+print(my_dict)  # Output: {'name': 'John', 'age': 30, 'city': 'San Francisco', 'gender': 'Male'}
+
+# Removing elements
+del my_dict['age']
+print(my_dict)  # Output: {'name': 'John', 'city': 'San Francisco', 'gender': 'Male'}
+
+# Iterating through a dictionary
+for key in my_dict:
+    print(key, ':', my_dict[key])
+
+# Dictionary methods
+print(my_dict.keys())    # Output: dict_keys(['name', 'city', 'gender'])
+print(my_dict.values())  # Output: dict_values(['John', 'San Francisco', 'Male'])
+print(my_dict.items())   # Output: dict_items([('name', 'John'), ('city', 'San Francisco'), ('gender', 'Male')])
+
+my_dict.update({'age': 31, 'city': 'San Francisco'})
+print(my_dict)                  # Output: {'name': 'Alice', 'age': 31, 'city': 'San Francisco', 'gender': 'Female'}
+
+# Removing elements
+removed_value = my_dict.pop('gender')
+print(removed_value)            # Output: Female
+print(my_dict)                  # Output: {'name': 'Alice', 'age': 31, 'city': 'San Francisco'}
+
+key_value_pair = my_dict.popitem()
+print(key_value_pair)           # Output: ('city', 'San Francisco')
+print(my_dict)                  # Output: {'name': 'Alice', 'age': 31}
+
+del my_dict['age']
+print(my_dict)                  # Output: {'name': 'Alice'}
+
+# Dictionary views
+print(my_dict.keys())           # Output: dict_keys(['name'])
+print(my_dict.values())         # Output: dict_values(['Alice'])
+print(my_dict.items())          # Output: dict_items([('name', 'Alice')])
+
+# Checking membership
+print('name' in my_dict)        # Output: True
+print('age' not in my_dict)     # Output: True
+
+# Clearing dictionary
+my_dict.clear()
+print(my_dict)                  # Output: {}
+
+
+
+#################
+SETS
+
+# Creating a set
+my_set = {1, 2, 3, 4, 5}
+
+# Adding elements
+my_set.add(6)
+print(my_set)  # Output: {1, 2, 3, 4, 5, 6}
+
+# Removing elements
+my_set.remove(3)
+print(my_set)  # Output: {1, 2, 4, 5, 6}
+
+# Iterating through a set
+for element in my_set:
+    print(element)
+
+# Set methods
+other_set = {4, 5, 6, 7, 8}
+
+print(my_set.union(other_set))                 # Output: {1, 2, 4, 5, 6, 7, 8}
+print(my_set.intersection(other_set))          # Output: {4, 5, 6}
+print(my_set.difference(other_set))            # Output: {1, 2}
+print(my_set.symmetric_difference(other_set))  # Output: {1, 2, 7, 8}
+
+# Note: Sets are unordered collections, so the output order may vary.
+
+# empty set= s()
+# empty dictionary = s{}
+
+
+#
+a = set()
+a.add(20)
+a.add(20.0)
+a.add("20:)
+print(len(a))   // return 2 as it compares the numerical value so for int and float its same and since its set so no duplicate values allowed hence len = 2
+
+
+##################
+PRINTING
+
+n = int(input())
+
+for rows in range(1, n+1):
+    print("  "* (n-1),end="")
+    print("*"* ((2*rows)-1),end="")
+    print("")
+
