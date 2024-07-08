@@ -1,0 +1,148 @@
+##########
+BASIC
+
+# integer division
+print(5/2) #perform normal divison ...returns 2.5
+print(5//2)  #perform integer divison ...returns 2
+
+# Exponent
+print(10 ** 3)
+
+# remainder
+print(10%3)
+
+# strings
+print('neha' + 'neha')
+print(3*'neha')
+
+// result 
+nehaneha
+nehanehaneha
+
+//
+use a \ to let the compiler print apostrophe
+
+name = 'Neha'
+print(name[2])
+// returns h
+print(name[-1])
+// returns the last i.e a
+
+print(name[0:2])
+// returns Ne
+
+print(name[2:])
+// returns ha
+
+// use len() function to find the length of the string
+
+
+###############
+LISTS
+
+
+//take user input for List and Nested List using For Loop and List Comprehension
+
+neha = []
+for i in range(0,3):
+    neha.append(int(input()))
+print(neha)
+
+n = 3
+neha = [int(input()) for i in range (n)]   // takes input as integers
+neha = [input() for i in range (n)]        // take input as string
+
+
+//
+big = []
+ran = int(input("total elements in the larger list"))
+for i in range(0,ran):
+    small = []
+    size = int(input("enter the size of the sub list"))
+    for j in range(0,size):
+        val = int(input())
+        small.append(val)
+
+    big.append(small)
+print(big)
+
+total elements in the larger list3
+enter the size of the sub list1
+3
+enter the size of the sub list2
+2
+3
+enter the size of the sub list3
+12
+2
+3
+[[3], [2, 3], [12, 2, 3]]
+
+
+//
+n = int(input("Enter the size of the list "))
+num_list = list(int(num) for num in input("Enter the list items separated by space ").strip().split())[:n]
+
+print("User list: ", num_list)
+
+Enter the size of the list 5
+Enter the list items separated by space 2 4 6 8 10
+
+User list:  [2, 4, 6, 8, 10]
+
+
+//
+for i in range(0,3):
+    neha = list(input().split())              // takes in string input
+    neha = list(map(int,input().split()))     // takes in int input
+print(neha)
+
+// nested list to a normal list
+flatList = [element for innerList in lis for element in innerList]
+
+
+// PROGRAM - 1
+m = int(input())
+n = int(input())
+
+total = (2*m)+(2*n)
+arr = []
+
+for i in range(0,m+n):
+    neha = list(map(int,input().split()))
+    arr.append(neha)
+print(arr)
+
+def Sort(sub_li):
+    l = len(sub_li)
+    for i in range(0, l):
+        for j in range(0, l-i-1):
+            if (sub_li[j][1] < sub_li[j + 1][1]):
+                tempo = sub_li[j]
+                sub_li[j]= sub_li[j + 1]
+                sub_li[j + 1]= tempo
+    return sub_li
+
+arr = Sort(arr)
+print(arr)
+
+latest = list(dict((x[0],x) for x in sorted(arr, key=len,reverse= False)).values())
+
+print(latest)
+
+latest = [element for innerList in latest for element in innerList]
+print(latest)
+
+
+latest = [latest[i:i+2] for i in range(0, len(latest), 2)]
+print(latest)
+
+l = []
+
+for i in latest:
+    l.insert(0, i)
+print(l)
+
+
+for i in l:
+        print(*i)
