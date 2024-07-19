@@ -278,11 +278,32 @@ WHERE s.id = m.id;
 dropping view
 DROP VIEW name;
 
+###################
+CASE(IF-ELSE)
 
+SELECT N,
+CASE
+WHEN P IS NULL THEN 'Root'
+WHEN N NOT IN (SELECT DISTINCT P FROM BST WHERE P IS NOT NULL) THEN 'Leaf'
+ELSE 'Inner'
+END
+FROM BST
+ORDER BY N;
 
+#############################
+CALCULATING MEDIAN
 
+SELECT DISTINCT PERCENTILE_CONT(0.5) 
+  WITHIN GROUP (ORDER BY list_price) OVER() AS "Median"
+FROM sales.order_items
 
-
+SELECT ROUND(AVG(LAT_N), 4) AS Median_Latitude
+FROM (
+    SELECT LAT_N
+    FROM STATION
+    ORDER BY LAT_N
+    LIMIT 2 - (SELECT COUNT(*) FROM STATION) % 2, 1
+) AS median_query;
 
 
 tips
