@@ -1,0 +1,55 @@
+Spark -> Scala(Advanced Java) -> provides API so its compatible with Python and Java 
+Architecture -> Master node(Driver Code > Spark Content)
+                Worker Nodes connected with master nodes using cluster manager
+
+Spark Context is like the DB
+RDD - Resililient (means flexible) Distributed Dataset  
+RDD is schemaless
+
+DAG - Directed Acyclic Graph is created upon creating RDD
+
+#################
+CREATION OF RDD
+
+-> to parallelize(...) some collection of elements
+-> by referencing a file located locally or externally
+
+###################
+TRANSFORMATIONS IN RDD
+
+-> map() : Applies a function func to each element in the RDD and returns a new RDD consisting of the results of the function.
+rdd = sc.parallelize([1, 2, 3, 4])
+squared_rdd = rdd.map(lambda x: x ** 2)
+
+-> filter():Applies a function func to each element and returns an RDD that contains only the elements where func returns true.
+rdd = sc.parallelize([1, 2, 3, 4, 5])
+filtered_rdd = rdd.filter(lambda x: x % 2 == 0)  # Keep only even numbers
+
+-> flatMap():Similar to map(), but each input item can be mapped to 0 or more output items (so func should return a sequence rather than a single item).
+rdd = sc.parallelize(["hello world", "how are you"])
+flat_mapped_rdd = rdd.flatMap(lambda x: x.split(" "))  # Split each sentence into words
+
+-> disctinct():Returns a new RDD containing distinct elements from the original RDD.
+rdd = sc.parallelize([1, 2, 2, 3, 3, 4])
+distinct_rdd = rdd.distinct()
+
+-> sample(withReplacement, fraction, seed=None):
+rdd = sc.parallelize(range(100))
+sampled_rdd = rdd.sample(False, 0.1)  # Sample 10% of the data without replacement
+
+-> sortByKey(ascending=True):
+rdd = sc.parallelize([(2, 'b'), (1, 'a'), (3, 'c')])
+sorted_rdd = rdd.sortByKey()  # Sort by key in ascending order
+
+-> union(other_rdd) and intersection(other_rdd):
+rdd1 = sc.parallelize([1, 2, 3])
+rdd2 = sc.parallelize([3, 4, 5])
+union_rdd = rdd1.union(rdd2)
+intersection_rdd = rdd1.intersection(rdd2)
+
+-> groupByKey() and reduceByKey(func):
+rdd = sc.parallelize([(1, 'a'), (2, 'b'), (1, 'c')])
+grouped_rdd = rdd.groupByKey()
+reduced_rdd = rdd.reduceByKey(lambda x, y: x + y)
+
+-> collect(), count(),saveAsTextFile()
