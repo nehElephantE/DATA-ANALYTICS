@@ -1,3 +1,56 @@
+####################
+INTRODUCTION
+
+BIG DATA
+Big data refers to extremely large and complex datasets that traditional data processing software can't effectively manage. It's characterized by the 
+"Three Vs": Volume, Velocity, and Variety, with some definitions adding Variability and Veracity. Here's a detailed breakdown of these aspects:
+
+### 1. Volume
+- **Definition**: Refers to the sheer amount of data generated and collected. This can range from terabytes to petabytes and beyond.
+- **Sources**: Data can come from various sources, including social media, sensors, transactional data, and more.
+- **Challenges**: Storing and processing such large volumes requires scalable storage solutions and robust computational power.
+
+### 2. Velocity
+- **Definition**: This aspect addresses the speed at which data is generated and processed. Data can be created in real-time or near-real-time.
+- **Examples**: Streaming data from social media, financial transactions, or IoT devices.
+- **Challenges**: The need for real-time processing and analysis can overwhelm traditional data management systems.
+
+### 3. Variety
+- **Definition**: Refers to the different types of data (structured, semi-structured, unstructured) that can be collected.
+- **Types**:
+  - **Structured Data**: Organized data, typically in databases (e.g., SQL databases).
+  - **Unstructured Data**: Data that doesn't have a predefined structure (e.g., text, images, videos).
+  - **Semi-Structured Data**: Hybrid data formats that may contain both structured and unstructured elements (e.g., JSON, XML).
+- **Challenges**: Integrating and analyzing diverse data types can complicate data management.
+
+### 4. Variability
+- **Definition**: Refers to the inconsistency of the data, which can change rapidly. This can impact data quality and analysis.
+- **Example**: Seasonal trends in consumer behavior can create fluctuations in data patterns.
+- **Challenges**: Maintaining data accuracy and relevance in the face of variability.
+
+### 5. Veracity
+- **Definition**: Addresses the quality and reliability of the data.
+- **Issues**: Data can be noisy, incomplete, or biased, which can affect the outcomes of data analysis.
+- **Challenges**: Ensuring data quality through validation and cleansing processes.
+
+
+PySPARK ARCHITECTURE
+1. Driver Program: The Driver Program is the main entry point for PySpark applications. It runs the user’s code and coordinates the execution of tasks across the cluster.
+The Driver Program communicates with the Cluster Manager to allocate resources, schedule tasks, and monitor their progress. It also manages the SparkContext, which is the
+entry point for interacting with Spark from Python.
+
+2. Cluster Manager: The Cluster Manager is responsible for managing the resources and scheduling tasks on a cluster of machines. It can be one of the supported cluster
+managers, such as Apache Mesos, Hadoop YARN, or Spark’s standalone cluster manager. The Cluster Manager allocates resources to the application based on the requested 
+configuration and manages the distribution of tasks to the available workers.
+
+3. Executors: Executors are worker processes that run on the cluster nodes and perform the actual computations. They are responsible for executing the tasks assigned to
+them by the Driver Program. Executors manage the data partitions and cache intermediate results in memory for efficient processing. They communicate with the Driver 
+Program and the Cluster Manager to receive tasks, report task status, and exchange data.
+
+4. Resilient Distributed Dataset (RDD): RDD is the fundamental data structure in PySpark. It represents an immutable distributed collection of objects across the cluster. 
+RDDs are partitioned and distributed across multiple nodes in the cluster, allowing for parallel processing of data. RDDs are fault-tolerant, meaning they can recover 
+from node failures by using their lineage information to reconstruct lost partitions.
+
 Spark -> Scala(Advanced Java) -> provides API so its compatible with Python and Java 
 Architecture -> Master node(Driver Code > Spark Content)
                 Worker Nodes connected with master nodes using cluster manager
