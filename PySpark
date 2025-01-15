@@ -1,7 +1,6 @@
 ####################
-INTRODUCTION
-
 BIG DATA
+
 Big data refers to extremely large and complex datasets that traditional data processing software can't effectively manage. It's characterized by the 
 "Three Vs": Volume, Velocity, and Variety, with some definitions adding Variability and Veracity. Here's a detailed breakdown of these aspects:
 
@@ -34,7 +33,93 @@ Big data refers to extremely large and complex datasets that traditional data pr
 - **Challenges**: Ensuring data quality through validation and cleansing processes.
 
 
+
+
+######################
+HADOOP vs PYSPARK
+
+1. Core Technology
+Hadoop:
+Hadoop is an open-source framework used for distributed storage and processing of large datasets. It primarily consists of 
+two components:
+HDFS (Hadoop Distributed File System): A distributed file system to store large datasets.
+MapReduce: A programming model and engine for processing and generating large datasets in parallel.
+PySpark:
+PySpark is the Python API for Apache Spark, which is a fast, in-memory data processing engine. Spark is designed to be more 
+efficient than Hadoop’s MapReduce by using memory for faster computation, which is often better suited for real-time analytics.
+
+2. Programming Model
+Hadoop:
+MapReduce is the primary programming model for processing data in Hadoop. It involves splitting tasks into smaller sub-
+tasks (mappers) and then combining the results (reducers). It's batch processing-based, which can be slower.
+PySpark:
+Spark uses a more flexible programming model, supporting APIs like RDDs (Resilient Distributed Datasets) and DataFrames for 
+distributed data processing. PySpark provides a Python interface to interact with Spark’s capabilities, offering higher-level 
+functions and faster processing than MapReduce.
+
+3. Performance
+Hadoop:
+Hadoop’s MapReduce is disk-based, which means it stores intermediate data on disk. This can result in slower performance 
+due to high I/O operations.
+PySpark:
+Spark is in-memory, meaning it processes data in RAM, significantly speeding up computations. This makes Spark much faster 
+for iterative machine learning and real-time analytics tasks compared to Hadoop.
+
+4. Ease of Use
+Hadoop:
+Writing MapReduce jobs can be complex and requires knowledge of Java (though other languages like Python can be used 
+with additional frameworks).
+PySpark:
+PySpark is more user-friendly, especially for Python developers, because it provides a simpler and higher-level API to
+process data using Python libraries.
+
+5. Real-Time Processing
+Hadoop:
+Hadoop is primarily designed for batch processing. It’s not suited for real-time data processing.
+PySpark:
+Spark supports both batch processing and real-time stream processing with Spark Streaming. This makes it more versatile
+for modern data processing needs, including real-time analytics.
+
+6. Fault Tolerance
+Hadoop:
+Hadoop provides fault tolerance through data replication in HDFS. If a node fails, the data is replicated on other nodes 
+to ensure no data loss.
+PySpark:
+Spark provides fault tolerance through RDDs. If a task fails, Spark recomputes the lost data using lineage information, 
+ensuring no data loss.
+
+7. Scalability
+Hadoop:
+Hadoop scales well by distributing data across a cluster and processing it in parallel. It is designed to handle petabytes
+of data.
+PySpark:
+Spark also scales efficiently and is optimized for speed. It can process data in parallel across a cluster and handle 
+very large datasets.
+
+8. Use Cases
+Hadoop:
+Hadoop is typically used for batch processing and large-scale data storage. It’s well-suited for ETL (Extract, Transform, Load)
+tasks, data warehousing, and data archiving.
+PySpark:
+PySpark is used for data analysis, machine learning, real-time processing, and data processing pipelines. It is popular 
+for tasks like big data analytics, ETL, and processing streaming data.
+
+9. Ecosystem
+Hadoop:
+Hadoop has a rich ecosystem of related tools, including:
+Hive: SQL-like interface for querying data.
+Pig: Scripting language for data processing.
+HBase: NoSQL database for real-time access to large datasets.
+PySpark:
+PySpark integrates with the broader Apache Spark ecosystem, which includes tools like:
+MLlib: Machine learning library.
+GraphX: Graph processing framework.
+Spark SQL: SQL-based querying interface.
+
+
+#######################
 PySPARK ARCHITECTURE
+
 1. Driver Program: The Driver Program is the main entry point for PySpark applications. It runs the user’s code and coordinates the execution of tasks across the cluster.
 The Driver Program communicates with the Cluster Manager to allocate resources, schedule tasks, and monitor their progress. It also manages the SparkContext, which is the
 entry point for interacting with Spark from Python.
@@ -61,14 +146,19 @@ RDD is schemaless
 
 DAG - Directed Acyclic Graph is created upon creating RDD
 
+
+
 #################
 CREATION OF RDD
 
 -> to parallelize(...) some collection of elements
 -> by referencing a file located locally or externally
 
+
 ###################
 TRANSFORMATIONS IN RDD
+
+transformations are of 2 types - narrow and wide
 
 -> map() : Applies a function func to each element in the RDD and returns a new RDD consisting of the results of the function.
 rdd = sc.parallelize([1, 2, 3, 4])
