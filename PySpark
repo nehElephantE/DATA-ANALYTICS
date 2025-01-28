@@ -159,31 +159,31 @@ A DAG is a graph where:
 When you perform a transformation (e.g., `map()`, `filter()`, `join()`) on an RDD (Resilient Distributed Dataset) or a DataFrame in PySpark, Spark constructs a 
 DAG to represent the sequence of operations.
 
-#### **How is DAG used in PySpark?**
+**How is DAG used in PySpark?**
 - **Stage creation**: The transformations are divided into stages based on data shuffling. Each stage contains a set of narrow transformations (e.g., `map`, `filter`, etc.) that can be computed without data shuffling. These operations can be executed in parallel. However, wide transformations (like `groupByKey`, `reduceByKey`, etc.) will cause shuffling, and thus a new stage is created.
 - **Execution plan**: The DAG is used by Spark’s scheduler to create an optimized execution plan that minimizes the number of stages and data shuffling required to complete the job.
 - **Fault tolerance**: If a partition of data is lost, the DAG can be recomputed from the original dataset, ensuring that no data is lost and computations can continue.
 
-#### **Example of DAG in PySpark:**
+ **Example of DAG in PySpark:**
 Here’s a simple example to illustrate how DAG is used in PySpark.
 
 ```python
 from pyspark.sql import SparkSession
 
-# Initialize Spark session
+ Initialize Spark session
 spark = SparkSession.builder.master("local").appName("DAG Example").getOrCreate()
 
-# Sample data
+ Sample data
 data = [("Alice", 25), ("Bob", 30), ("Catherine", 35), ("David", 40)]
 df = spark.createDataFrame(data, ["name", "age"])
 
-# Transformation 1: Filter the people whose age is greater than 30
+ Transformation 1: Filter the people whose age is greater than 30
 filtered_df = df.filter(df.age > 30)
 
-# Transformation 2: Add a new column with a modified age
+ Transformation 2: Add a new column with a modified age
 modified_df = filtered_df.withColumn("age_plus_five", df.age + 5)
 
-# Action: Show the result
+ Action: Show the result
 modified_df.show()
 ```
 
@@ -192,7 +192,7 @@ modified_df.show()
 2. The second transformation (`withColumn`) creates another stage that adds a new column.
 3. The **action** (`show`) triggers the execution, where Spark builds a DAG based on these transformations, divides it into stages, and performs the required computations.
 
-### **Lazy Evaluation in PySpark:**
+ **Lazy Evaluation in PySpark:**
 
 **Lazy evaluation** is an optimization technique used by Spark where transformations are not executed immediately when called. Instead, Spark builds an execution plan (a DAG) that describes the transformations, but no actual computation is done until an action is called (e.g., `collect()`, `show()`, `count()`).
 
@@ -200,29 +200,29 @@ This allows Spark to:
 1. **Optimize the execution plan**: Since the operations are only recorded and not executed immediately, Spark can optimize the DAG by merging stages and minimizing shuffling.
 2. **Avoid unnecessary computations**: It can avoid computing intermediate results that may not be needed for the final result.
 
-#### **How Lazy Evaluation Works in PySpark:**
+ **How Lazy Evaluation Works in PySpark:**
 - **Transformation**: Operations like `map()`, `filter()`, `select()`, `withColumn()`, etc., are transformations. These transformations define the structure of the resulting RDD/DataFrame but do not perform any computation.
 - **Action**: Actions like `collect()`, `show()`, `count()`, `save()`, etc., trigger the actual computation. These actions will materialize the transformations and execute them.
 
-#### **Example of Lazy Evaluation:**
+ **Example of Lazy Evaluation:**
 
 ```python
 from pyspark.sql import SparkSession
 
-# Initialize Spark session
+ Initialize Spark session
 spark = SparkSession.builder.master("local").appName("Lazy Evaluation Example").getOrCreate()
 
-# Sample data
+ Sample data
 data = [("Alice", 25), ("Bob", 30), ("Catherine", 35), ("David", 40)]
 df = spark.createDataFrame(data, ["name", "age"])
 
-# Lazy transformation: filter records where age is greater than 30
+ Lazy transformation: filter records where age is greater than 30
 filtered_df = df.filter(df.age > 30)
 
-# Lazy transformation: add 5 to age
+ Lazy transformation: add 5 to age
 modified_df = filtered_df.withColumn("age_plus_five", filtered_df.age + 5)
 
-# Action: Show the result
+ Action: Show the result
 modified_df.show()
 ```
 
@@ -234,11 +234,11 @@ modified_df.show()
    - Optimize it (e.g., combine the transformations if possible).
    - Execute the plan efficiently by distributing the work across the cluster.
 
-### **Benefits of Lazy Evaluation in PySpark:**
+ **Benefits of Lazy Evaluation in PySpark:**
 1. **Optimization**: Spark can optimize the execution plan by analyzing the entire DAG before execution. For instance, it may eliminate redundant transformations, minimize the amount of data shuffled between nodes, or re-order operations to improve performance.
 2. **Efficiency**: Since transformations are not executed until an action is called, Spark can minimize the computation and resource consumption by avoiding unnecessary intermediate steps.
 
-### **Summary of Lazy Evaluation and DAG in PySpark:**
+ **Summary of Lazy Evaluation and DAG in PySpark:**
 - **DAG**: Spark constructs a DAG to represent the sequence of operations performed on RDDs/DataFrames. This helps in parallel processing, fault tolerance, and efficient execution of tasks.
 - **Lazy Evaluation**: Spark uses lazy evaluation for transformations. It builds the DAG without performing actual computations until an action is triggered. This allows Spark to optimize the execution plan and minimize unnecessary computations.
 
