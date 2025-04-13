@@ -151,9 +151,11 @@ ADD COLUMN column_name datatype constraints;
 ALTER TABLE table_name
 DROP COLUMN column_name;
 
+-> table name change karne ke liye
 ALTER TABLE table_name
 RENAME TO new_table_name;
 
+-> table mein koi col ka name change karne ke liye
 ALTER TABLE table_name
 CHANGE old_name new_name new_datatype new_constraints;
 
