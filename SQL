@@ -352,3 +352,438 @@ WHERE RIGHT(CITY,1) IN ('A', 'E', 'I', 'O', 'U', 'a', 'e', 'i', 'o', 'u');
 
 right side se first character
 aise hi left bhi rehta ... use it for extraction
+
+
+#############################
+WINDOWS FUNCTION
+
+Operate on a "window" of rows defined by the OVER() clause
+Don't group rows like GROUP BY - each row remains visible in the result
+Can access other rows in the same result set
+Often used for rankings, running totals, moving averages, and comparing rows
+
+
+PARTITION BY	 --------------Groups rows into subsets for per-group calculations	-------Calculate department-specific metrics
+ORDER BY	-------------------Sorts rows within partitions for sequencing---------------	Compute running totals or rankings
+
+
+->
+-- Total sales per region alongside individual transactions [4]
+SELECT 
+  region,
+  sale_amount,
+  SUM(sale_amount) OVER (PARTITION BY region) AS regional_total
+FROM sales;
+
+Yahan pe uss table pe ek extra column add hoga named "regional_total" for each row
+but if we use GROUP_BY() then rows will get collapsed
+
+
+->
+
+Compare rows to group averages/peaks:
+
+-- Products exceeding category average price [2]
+SELECT 
+  product_id,
+  category,
+  price,
+  AVG(price) OVER (PARTITION BY category) AS category_avg
+FROM products;
+
+
+-> Ranking Functions - ROW_NUMBER() - Assigns a unique sequential integer to rows within a partition.
+SELECT 
+    employee_id,
+    first_name,
+    last_name,
+    salary,
+    ROW_NUMBER() OVER (ORDER BY salary DESC) as salary_rank
+FROM employees;
+
+RANK(): Leaves gaps in the ranking when there are ties
+DENSE_RANK(): Doesn't leave gaps in the ranking
+
+SELECT 
+    product_id,
+    product_name,
+    price,
+    RANK() OVER (ORDER BY price DESC) as rank_price,
+    DENSE_RANK() OVER (ORDER BY price DESC) as dense_rank_price
+FROM products;
+
+
+-> Aggregate Functions
+
+SELECT 
+    order_id,
+    customer_id,
+    order_date,
+    amount,
+    SUM(amount) OVER (PARTITION BY customer_id) as customer_total,
+    AVG(amount) OVER (PARTITION BY customer_id) as customer_avg,
+    COUNT(*) OVER (PARTITION BY customer_id) as customer_orders
+FROM orders;
+
+
+-> Value Functions - FIRST_VALUE() and LAST_VALUE() - Get the first or last value in a window frame.
+
+SELECT 
+    department_id,
+    employee_id,
+    salary,
+    FIRST_VALUE(employee_id) OVER (
+        PARTITION BY department_id 
+        ORDER BY salary DESC
+    ) as highest_paid_emp,
+    LAST_VALUE(employee_id) OVER (
+        PARTITION BY department_id 
+        ORDER BY salary DESC
+        RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+    ) as lowest_paid_emp
+FROM employees;
+
+UNBOUNDED PRECEDING: All rows from the start of the partition
+UNBOUNDED FOLLOWING: All rows to the end of the partition
+it makes the window function consider the entire partition for each calculation, regardless of the current row's position.
+
+
+LAG() and LEAD() - Access data from previous or subsequent rows.
+
+SELECT 
+    date,
+    revenue,
+    LAG(revenue, 1) OVER (ORDER BY date) as prev_day_revenue,
+    LEAD(revenue, 1) OVER (ORDER BY date) as next_day_revenue,
+    revenue - LAG(revenue, 1) OVER (ORDER BY date) as daily_change
+FROM daily_sales;
+
+
+-> Statistical Functions - PERCENT_RANK(): Relative rank of a row (0 to 1) 
+CUME_DIST(): Cumulative distribution (proportion of rows ≤ current row)
+
+SELECT 
+    student_id,
+    test_score,
+    PERCENT_RANK() OVER (ORDER BY test_score) as percentile,
+    CUME_DIST() OVER (ORDER BY test_score) as cumulative_dist
+FROM test_scores;
+
+NTILE() - Divides rows into a specified number of approximately equal groups.
+SELECT 
+    customer_id,
+    total_purchases,
+    NTILE(4) OVER (ORDER BY total_purchases DESC) as quartile
+FROM customer_stats;
+
+
+->
+SELECT 
+    date,
+    revenue,
+    AVG(revenue) OVER (
+        ORDER BY date
+        ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
+    ) as three_day_moving_avg,
+    SUM(revenue) OVER (
+        ORDER BY date
+        RANGE BETWEEN INTERVAL '7' DAY PRECEDING AND CURRENT ROW
+    ) as seven_day_running_total
+FROM daily_sales;
+
+
+Moving Average or Rolling Average - Apne paas ek window hai aur uss window mein current row ke thode rows upar ya neeche ko consider karke hum log average nikalte
+then the window shifts down and the average is re calculated
+
+In the above code we are calculating 3 day moving average
+current window size mein current row aur pichle 2 rows ka average nikalna hai
+
+We are also calculating 7 days running total
+RANGE BETWEEN INTERVAL '7' DAY PRECEDING AND CURRENT ROW: Defines a frame containing:
+The current row
+All rows where the date is within 7 days before the current row's date
+
+ROW BETWEEN and RANGE BETWEEN mein difference yeh hai ki ROW BETWEEN mein Rows ke position ko lekr hoga
+RANGE BETWEEN mein woh sepecific value column ko lekr hoga jaise idhar date tha
+It will include all rows that fall within the date range, even if there are missing dates
+If multiple rows have the same date, they're all included
+
+
+->
+
+analysis of employee salaries within each department
+
+SELECT 
+    department_id,
+    employee_id,
+    salary,
+    ROUND(salary * 100.0 / SUM(salary) OVER (PARTITION BY department_id), 2) as salary_pct,
+    salary - AVG(salary) OVER (PARTITION BY department_id) as diff_from_avg,
+    RANK() OVER (PARTITION BY department_id ORDER BY salary DESC) as dept_rank
+FROM employees
+ORDER BY department_id, salary DESC;
+
+
+ROUND(salary * 100.0 / SUM(salary) OVER (PARTITION BY department_id), 2) as salary_pct
+Ki individual salary department salary ka kitna % hai
+
+salary - AVG(salary) OVER (PARTITION BY department_id) as diff_from_avg
+Shows how much more or less each employee earns compared to their department average
+
+RANK() OVER (PARTITION BY department_id ORDER BY salary DESC) as dept_rank
+Ranks employees by salary within their department (highest salary = rank 1)
+
+
+
+->
+
+SELECT 
+    customer_id,
+    order_date,
+    amount,
+    SUM(amount) OVER (
+        PARTITION BY customer_id
+        ORDER BY order_date
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) as running_total,
+    LAG(amount, 1, 0) OVER (
+        PARTITION BY customer_id
+        ORDER BY order_date
+    ) as prev_order_amount
+FROM orders
+ORDER BY customer_id, order_date;
+
+
+we calculated running total - toh rows current wale au uske pehle tak ke hence - ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+we calculated Previous Order Amount - LAG(amount, 1, 0): Looks back 1 row to get the previous amount (defaults to 0 if no previous row exists)
+
+
+
+->
+
+SELECT 
+    department_id,
+    employee_id,
+    salary,
+    RANK() OVER (PARTITION BY department_id ORDER BY salary) as dept_rank
+FROM employees
+WHERE 1=0;  -- No rows returned
+
+Empty Result Set: The query will return zero rows because:
+WHERE 1=0 is a false condition for all rows
+This filters out all records before window functions are applied
+
+
+->
+
+SELECT 
+    employee_id,
+    RANK() OVER (ORDER BY NULL) as rank
+FROM employees;
+
+All rows get rank 1 since all are equivalent.
+
+
+->
+
+SELECT 
+    product_id,
+    category,
+    sales,
+    RANK() OVER (PARTITION BY category ORDER BY sales DESC) as category_rank,
+    RANK() OVER (ORDER BY sales DESC) as overall_rank,
+    sales - LAG(sales, 1, 0) OVER (PARTITION BY category ORDER BY month) as sales_growth
+FROM product_sales;
+
+
+->
+
+RANGE BETWEEN mein by default yeh rehta hai - RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+
+SELECT 
+    date,
+    revenue,
+    LAST_VALUE(revenue) OVER (ORDER BY date) as last_revenue
+FROM daily_sales;
+
+This doesn't work as expected because the default frame only goes up to the current row.
+
+SELECT 
+    date,
+    revenue,
+    LAST_VALUE(revenue) OVER (
+        ORDER BY date
+        RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+    ) as last_revenue
+FROM daily_sales;
+
+
+->
+
+SELECT 
+    student_id,
+    test_score,
+    test_score - AVG(test_score) OVER (
+        RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+    ) as diff_from_mean,
+    test_score * 100.0 / MAX(test_score) OVER (
+        RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+    ) as percent_of_max
+FROM exam_results;
+
+
+->
+
+SELECT *
+FROM (
+  SELECT 
+    order_id,
+    month,
+    amount,
+    ROW_NUMBER() OVER (
+      PARTITION BY month 
+      ORDER BY amount DESC
+    ) AS rank
+  FROM orders
+) ranked_orders
+WHERE rank <= 2;
+
+Top 2 orders by amount each month
+
+
+->
+
+-- Unique email activity ranks with ROW_NUMBER() [3]
+SELECT 
+  from_user,
+  COUNT(*) AS total_emails,
+  ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS rank
+FROM google_gmail_emails
+GROUP BY from_user;
+
+Rank karo sabse zyada total emails kis user ne bheje
+
+
+->
+
+-- Top 3 products per category by price
+SELECT *
+FROM (
+  SELECT 
+    product_name,
+    category,
+    price,
+    RANK() OVER (PARTITION BY category ORDER BY price DESC) AS price_rank
+  FROM products
+) ranked
+WHERE price_rank <= 3;
+
+
+->
+
+-- Sum of current + next row's sales [2]
+SELECT 
+  BusinessEntityID,
+  SalesYTD,
+  SUM(SalesYTD) OVER (
+    ORDER BY SalesYear
+    ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING
+  ) AS next_two_sales
+FROM Sales.SalesPerson;
+
+or
+
+SELECT 
+  BusinessEntityID,
+  SalesYTD,
+  SalesYTD + LEAD(SalesYTD,1) OVER(ORDER BY SalesYear) AS next_two_sales
+FROM Sales.SalesPerson;
+
+
+
+###############################
+CTE
+WITH numbered_days AS (
+    SELECT 
+        date,
+        ROW_NUMBER() OVER (ORDER BY date) as row_num
+    FROM attendance
+    WHERE student_id = 123 AND present = true
+)
+SELECT 
+    MIN(date) as start_date,
+    MAX(date) as end_date,
+    COUNT(*) as days_present
+FROM (
+    SELECT 
+        date,
+        date - row_num * INTERVAL '1 day' as grp
+    FROM numbered_days
+) t
+GROUP BY grp
+ORDER BY start_date;
+
+
+
+->
+
+-- Create test data with ties
+WITH test_data AS (
+    SELECT 1 as id, 100 as value UNION ALL
+    SELECT 2, 100 UNION ALL
+    SELECT 3, 200 UNION ALL
+    SELECT 4, 200 UNION ALL
+    SELECT 5, 300
+)
+SELECT 
+    id,
+    value,
+    ROW_NUMBER() OVER (ORDER BY value) as row_num,
+    RANK() OVER (ORDER BY value) as rank,
+    DENSE_RANK() OVER (ORDER BY value) as dense_rank
+FROM test_data;
+
+
+->
+
+WITH orders_cleaned AS (
+  SELECT 
+    order_id,
+    customer_id,
+    amount,
+    ROW_NUMBER() OVER (
+      PARTITION BY customer_id, order_date 
+      ORDER BY order_id
+    ) AS duplicate_flag
+  FROM orders
+)
+SELECT * 
+FROM orders_cleaned 
+WHERE duplicate_flag = 1;
+
+filtering duplicates
+
+
+->
+
+WITH customer_orders AS (
+  SELECT 
+    customer_id,
+    order_date,
+    amount,
+    LAG(order_date) OVER (
+      PARTITION BY customer_id 
+      ORDER BY order_date
+    ) AS prev_order_date
+  FROM orders
+)
+SELECT 
+  customer_id,
+  order_date,
+  prev_order_date,
+  DATE_DIFF(order_date, prev_order_date, DAY) AS days_between_orders
+FROM customer_orders;
+
+
+Calculates time intervals between consecutive purchases
+
