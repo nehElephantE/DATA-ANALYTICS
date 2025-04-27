@@ -787,3 +787,12 @@ FROM customer_orders;
 
 Calculates time intervals between consecutive purchases
 
+
+
+################################
+SUBQUERIES
+
+
+
+
+
