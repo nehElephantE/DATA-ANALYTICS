@@ -802,7 +802,92 @@ SUBQUERIES
 
 
 ################################
-CTE
+DATE TIME MANIPULATION
 
+| Function          | Description               | Example                                 |
+| ----------------- | ------------------------- | --------------------------------------- |
+| `NOW()`           | Current date and time     | `SELECT NOW();` → `2025-09-11 14:23:00` |
+| `CURDATE()`       | Current date              | `SELECT CURDATE();` → `2025-09-11`      |
+| `CURTIME()`       | Current time              | `SELECT CURTIME();` → `14:23:00`        |
+| `UTC_TIMESTAMP()` | Current UTC date and time | `SELECT UTC_TIMESTAMP();`               |
+
+
+| Function        | Description            | Example                                        |
+| --------------- | ---------------------- | ---------------------------------------------- |
+| `YEAR(date)`    | Extract year           | `SELECT YEAR('2025-09-11');` → `2025`          |
+| `MONTH(date)`   | Extract month          | `SELECT MONTH('2025-09-11');` → `9`            |
+| `DAY(date)`     | Extract day            | `SELECT DAY('2025-09-11');` → `11`             |
+| `HOUR(time)`    | Extract hour           | `SELECT HOUR('14:23:00');` → `14`              |
+| `MINUTE(time)`  | Extract minute         | `SELECT MINUTE('14:23:00');` → `23`            |
+| `SECOND(time)`  | Extract second         | `SELECT SECOND('14:23:00');` → `0`             |
+| `WEEKDAY(date)` | Day of week (0=Monday) | `SELECT WEEKDAY('2025-09-11');` → `3`          |
+| `DAYNAME(date)` | Name of day            | `SELECT DAYNAME('2025-09-11');` → `'Thursday'` |
+
+
+| Function                             | Description              | Example                                                           |
+| ------------------------------------ | ------------------------ | ----------------------------------------------------------------- |
+| `DATE_ADD(date, INTERVAL expr unit)` | Add interval             | `SELECT DATE_ADD('2025-09-11', INTERVAL 7 DAY);` → `2025-09-18`   |
+| `DATE_SUB(date, INTERVAL expr unit)` | Subtract interval        | `SELECT DATE_SUB('2025-09-11', INTERVAL 1 MONTH);` → `2025-08-11` |
+| `ADDDATE()`                          | Synonym for `DATE_ADD()` |                                                                   |
+| `SUBDATE()`                          | Synonym for `DATE_SUB()` |                                                                   |
+
+
+| Function                    | Description           | Example                                                                   |
+| --------------------------- | --------------------- | ------------------------------------------------------------------------- |
+| `DATE_FORMAT(date, format)` | Format date as string | `SELECT DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s');` → `2025-09-11 14:23:00` |
+
+
+Common format codes:
+%Y = 4-digit year
+%y = 2-digit year
+%m = 2-digit month
+%d = 2-digit day
+%H = 2-digit hour (24h)
+%i = minutes
+%s = seconds
+
+| Function                   | Description          | Example                                                        |
+| -------------------------- | -------------------- | -------------------------------------------------------------- |
+| `STR_TO_DATE(str, format)` | Parse string to date | `SELECT STR_TO_DATE('11-09-2025', '%d-%m-%Y');` → `2025-09-11` |
+
+
+| Function                                    | Description                  | Example                                                                               |
+| ------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------- |
+| `DATEDIFF(date1, date2)`                    | Days between two dates       | `SELECT DATEDIFF('2025-09-11', '2025-09-01');` → `10`                                 |
+| `TIMEDIFF(time1, time2)`                    | Difference between two times | `SELECT TIMEDIFF('14:23:00', '12:00:00');` → `02:23:00`                               |
+| `TIMESTAMPDIFF(unit, datetime1, datetime2)` | Difference in specific units | `SELECT TIMESTAMPDIFF(MINUTE, '2025-09-11 12:00:00', '2025-09-11 14:00:00');` → `120` |
+
+
+| Function                         | Description           | Example                                         |
+| -------------------------------- | --------------------- | ----------------------------------------------- |
+| `LAST_DAY(date)`                 | Last day of the month | `SELECT LAST_DAY('2025-09-11');` → `2025-09-30` |
+| `MAKEDATE(year, day_of_year)`    | Create a date         | `SELECT MAKEDATE(2025, 254);` → `2025-09-11`    |
+| `MAKETIME(hour, minute, second)` | Create time           | `SELECT MAKETIME(14, 23, 0);` → `14:23:00`      |
+| `UTC_DATE()`                     | Current UTC date      | `SELECT UTC_DATE();`                            |
+
+
+EXTRACT(unit FROM date)
+SELECT EXTRACT(YEAR FROM '2025-09-11');        -- 2025
+SELECT EXTRACT(MONTH FROM '2025-09-11');       -- 9
+SELECT EXTRACT(DAY FROM '2025-09-11');         -- 11
+SELECT EXTRACT(HOUR FROM '2025-09-11 14:23');  -- 14
+
+Common Units:
+YEAR
+MONTH
+DAY
+HOUR
+MINUTE
+SECOND
+WEEK
+DAYOFWEEK
+DAYOFYEAR
+QUARTER
+
+
+| SQL Server `DATENAME()`   | MySQL Equivalent  |
+| ------------------------- | ----------------- |
+| `DATENAME(WEEKDAY, date)` | `DAYNAME(date)`   |
+| `DATENAME(MONTH, date)`   | `MONTHNAME(date)` |
 
 
