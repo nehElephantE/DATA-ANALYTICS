@@ -892,3 +892,53 @@ QUARTER
 | `DATENAME(MONTH, date)`   | `MONTHNAME(date)` |
 
 
+
+###############################
+NORMALISATION
+
+Eliminate redundant data
+Ensure data dependencies make sense
+Reduce data modification anomalies
+Simplify database structure
+
+Problems Without Normalization:
+Data Redundancy: Same data stored multiple times
+Update Anomalies: Inconsistent data when updating
+Insertion Anomalies: Cannot add data without other data
+Deletion Anomalies: Loss of unrelated data when deleting
+
+
+1. First Normal Form (1NF) - EASY
+Rules:
+Each table cell must contain a single value
+Each record must be unique
+
+
+2. Second Normal Form (2NF) - MEDIUM
+Rules:
+Must be in 1NF
+All non-key attributes must depend on the entire primary key
+
+
+3. Third Normal Form (3NF) - MEDIUM/HARD
+Rules:
+Must be in 2NF
+No transitive dependencies (non-key attributes shouldn't depend on other non-key attributes)
+
+
+4. Boyce-Codd Normal Form (BCNF) - HARD
+Rules:
+Must be in 3NF
+For every functional dependency X → Y, X must be a superkey
+
+
+5. Fourth Normal Form (4NF) - ADVANCED
+Rules:
+Must be in BCNF
+No multi-valued dependencies
+
+
+6. Fifth Normal Form (5NF) - EXPERT
+Rules:
+Must be in 4NF
+No join dependencies
