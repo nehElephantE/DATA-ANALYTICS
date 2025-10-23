@@ -364,7 +364,8 @@ aise hi left bhi rehta ... use it for extraction
 WINDOWS FUNCTION
 
 Operate on a "window" of rows defined by the OVER() clause
-Don't group rows like GROUP BY - each row remains visible in the result
+Don't group rows like GROUP BY - each row remains visible in the result 
+GROUP BY collapses rows, while OVER() keeps all rows and spreads the result of an aggregation across them.
 Can access other rows in the same result set
 Often used for rankings, running totals, moving averages, and comparing rows
 
@@ -374,7 +375,7 @@ ORDER BY	-------------------Sorts rows within partitions for sequencing---------
 
 
 ->
--- Total sales per region alongside individual transactions [4]
+-- Total sales per region alongside individual transactions
 SELECT 
   region,
   sale_amount,
@@ -389,7 +390,7 @@ but if we use GROUP_BY() then rows will get collapsed
 
 Compare rows to group averages/peaks:
 
--- Products exceeding category average price [2]
+-- Products exceeding category average price
 SELECT 
   product_id,
   category,
