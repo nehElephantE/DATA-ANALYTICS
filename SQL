@@ -709,7 +709,106 @@ FROM Sales.SalesPerson;
 
 
 ###############################
-CTE
+CTE - (Common Table Expressions)
+
+Think of it as creating a temporary table just for that query, without storing anything in the database.
+It is defined using the WITH keyword.
+
+-> Basic Syntax
+WITH cte_name (column1, column2, ...) AS (
+    -- CTE query definition
+    SELECT column1, column2, ...
+    FROM table_name
+    WHERE conditions
+)
+-- Main query that uses the CTE
+SELECT *
+FROM cte_name;
+
+
+
+-> List employees whose salary is above the average salary.
+WITH avg_salary AS (
+// ek dummy tabke si bana li jahan pe avg sal hoga 
+    SELECT AVG(salary) AS avg_sal
+    FROM employees
+)
+SELECT name, salary
+FROM employees
+WHERE salary > (SELECT avg_sal FROM avg_salary);
+
+
+-> Calculate average salary and find employees above average
+WITH avg_sal AS(
+  SELECT AVG(salary) as average_salary
+  FROM employees
+)
+select * from employees
+where salary > average_salary
+
+This solution is wrong because The average_salary column only exists within the context of the avg_sal CTE, 
+but you're trying to reference it directly in the main query's WHERE clause.
+
+
+Sol1 -
+WITH avg_sal AS(
+  SELECT AVG(salary) as average_salary
+  FROM employees
+)
+SELECT e.*, a.average_salary
+FROM employees e
+CROSS JOIN avg_sal a
+WHERE e.salary > a.average_salary;
+
+SOl2 -
+WITH avg_sal AS(
+  SELECT AVG(salary) as average_salary
+  FROM employees
+)
+SELECT * FROM employees
+WHERE salary > (SELECT average_salary FROM avg_sal);
+
+Sol3-
+WITH avg_sal AS(
+  SELECT AVG(salary) as average_salary
+  FROM employees
+)
+SELECT e.*
+FROM employees e, avg_sal a
+WHERE e.salary > a.average_salary;
+
+
+
+-> Find the top 3 highest-paid employees from each department.
+WITH ranked AS (
+// pehle rank karke ek table banaya jahan pe dept wise top 3 hai
+    SELECT 
+        name,
+        department,
+        salary,
+        RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS rnk
+    FROM employees
+),
+top3 AS (
+// upar wale table se ek aur table banaya jahan pe se sirf top 3 uthaye
+    SELECT *
+    FROM ranked
+    WHERE rnk <= 3
+)
+SELECT * FROM top3;
+
+
+
+-> This is a problem hierarchy - Get all employees under CEO, with levels
+CEO (id=1)
+ ├── Manager A (id=2)
+ │     ├── Employee X (id=5)
+ │     └── Employee Y (id=6)
+ └── Manager B (id=3)
+       └── Intern Z (id=7)
+
+
+
 WITH numbered_days AS (
     SELECT 
         date,
@@ -942,3 +1041,8 @@ No multi-valued dependencies
 Rules:
 Must be in 4NF
 No join dependencies
+
+
+
+##############################
+VIEWS
