@@ -43,3 +43,166 @@ BA: Emphasizes data modeling, statistical analysis, and machine learning.
 Decision-Making:
 BI: Supports tactical decision-making.
 BA: Supports strategic decision-making.
+
+
+
+####################################
+DIFFERENCE BETWEEN ETL && ELT
+| Feature                          | ETL                                            | ELT                                       |
+| -------------------------------- | ---------------------------------------------- | ----------------------------------------- |
+| **Transform happens...**         | Before loading                                 | After loading                             |
+| **Where transformation happens** | ETL tools / compute layer (Spark, Informatica) | Data warehouse/lake (Snowflake, BigQuery) |
+| **Best for**                     | Traditional warehouses                         | Cloud data warehouses & lakehouses        |
+| **Processing speed**             | Slower for huge datasets                       | Faster due to scalable cloud compute      |
+| **Storage requirements**         | Raw data not always kept                       | Raw + transformed data can coexist        |
+| **Flexibility**                  | Less                                           | Very high (raw data kept for future)      |
+
+
+###################################
+DIFFERENCE OLAP && OLTP
+
+| Feature     | OLTP                             | OLAP                             |
+| ----------- | -------------------------------- | -------------------------------- |
+| Meaning     | Online Transaction Processing    | Online Analytical Processing     |
+| Used for    | Daily operations                 | Analysis & insights              |
+| Examples    | Banking app, e-commerce checkout | PowerBI dashboards, ML pipelines |
+| Queries     | Short, simple                    | Long, complex                    |
+| Data stored | Current, real-time               | Large historical datasets        |
+| Design      | Normalized schema                | Dimensional (star/snowflake)     |
+
+
+####################################
+DATA WAREHOUSING
+
+->is a centralized repository that stores integrated data from multiple source systems.
+-> It's designed specifically for analytics and reporting (OLAP - Online Analytical Processing), unlike operational databases that handle 
+day-to-day transactions (OLTP - Online Transaction Processing).
+
+. The Four Key Properties
+Subject-Oriented
+Organized around major subjects of the enterprise (Customers, Products, Sales)
+Not organized around applications or functions
+Example: "Customer" subject contains all customer-related data
+
+Integrated
+Data is consolidated from multiple, disparate sources
+Inconsistencies are resolved (standardized formats, codes, etc.)
+Single version of truth
+
+Time-Variant
+Data is stored with a time dimension
+Historical data is maintained (years of history)
+Enables trend analysis and historical reporting
+
+Non-Volatile
+Data is read-only once inserted
+Updates happen through periodic loading, not real-time transactions
+Stable environment for analysis
+
+
+The Problem with Operational Systems:
+Performance: Analytics queries slow down transaction systems
+Data Silos: Data scattered across different systems
+Inconsistent Data: Different formats, codes, and definitions
+Complex Queries: Hard to write analytical queries on normalized schemas
+
+The Solution - Data Warehouse:
+Separation of Concerns: Analytics separated from transactions
+Integrated View: Unified view of enterprise data
+Optimized for Analytics: Schema and storage optimized for reporting
+Historical Analysis: Maintains historical data for trends
+
+
+-> Architecture
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   SOURCE        │    │   DATA WAREHOUSE │    │    BI &         │
+│   SYSTEMS       │───▶│     LAYERS       │───▶│    ANALYTICS    │
+│                 │    │                  │    │                 │
+│ • OLTP Systems  │    │ • Staging Area   │    │ • Reports       │
+│ • CRM           │    │ • Data Warehouse │    │ • Dashboards    │
+│ • ERP           │    │ • Data Marts     │    │ • ML Models     │
+│ • Files         │    │                  │    │                 │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+
+A. Source Systems
+Operational databases (SQL Server, Oracle, MySQL)
+CRM systems (Salesforce, HubSpot)
+ERP systems (SAP, Oracle)
+Flat files (CSV, Excel, JSON)
+APIs and external data sources
+
+B. Staging Area (Optional but Recommended)
+Temporary storage for raw data from sources
+Used for data cleaning and preparation
+Usually not accessed by end users
+
+C. Data Warehouse Core
+Main repository of integrated, historical data
+Uses dimensional modeling (Star/Snowflake schemas)
+Contains detailed and aggregated data
+
+D. Data Marts
+Subset of data warehouse focused on specific business area
+Examples: Sales Data Mart, Marketing Data Mart, Finance Data Mart
+Can be dependent (from warehouse) or independent (direct from sources)
+
+E. BI & Analytics Layer
+Reporting tools (Tableau, Power BI, Looker)
+Analytical applications
+Data science and ML platforms
+
+
+-> Data Modelling in Warehousing
+A. Dimensional Modeling (Kimball Methodology)
+The most popular approach for data warehousing:
+Fact Tables
+Contain business measurements (metrics, facts)
+Usually numeric and additive
+Examples: Sales amount, Quantity sold, Profit
+
+B. Star Schema vs Snowflake Schema
+Star Schema (Recommended for performance)
+Fact table connected directly to dimension tables
+Denormalized dimensions
+Better query performance
+     fact_sales
+    /     |     \
+dim_date  dim_customer  dim_product
+
+Snowflake Schema
+Normalized dimensions (tables split into multiple related tables)
+Saves storage but more complex queries
+Example: dim_product → dim_category → dim_department
+
+     fact_sales
+    /     |     \
+dim_date  dim_customer  dim_product
+                              |
+                        dim_category
+                              |
+                        dim_department
+
+
+-> Slowly Changing Dimensions (SCDs)
+Type 0 - Retain Original: Never changes
+Type 1 - Overwrite: Update existing record (loses history)
+Type 2 - Add New Record: Insert new record with new surrogate key (preserves history)
+Type 3 - Add New Column: Add columns for previous values (limited history)
+
+-> Surrogate Keys
+Artificially created primary keys (1, 2, 3, ...)
+Independent of source system keys
+Essential for handling SCD Type 2
+Improve join performance
+
+-> Granularity
+The level of detail stored in fact tables
+Examples:
+Daily sales by product by store (high granularity)
+Monthly sales by product category (low granularity)
+Higher granularity = more flexibility but more storage
+
+-> Conformed Dimensions
+Dimensions shared across multiple data marts
+Ensure consistency across the enterprise
+Example: Date dimension used by Sales and Marketing data marts
