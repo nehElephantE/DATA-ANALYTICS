@@ -94,6 +94,13 @@ PYTHON STRING FUNCTION
     - `str.rjust(width[, fillchar])`: Returns a right-justified string of specified width.
 
 
+->
+str = "neha"
+str[1] = "R"
+I cannot do this
+i cannot assign values with index positions
+
+
 ###############
 LISTS
 
