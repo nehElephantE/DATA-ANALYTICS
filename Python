@@ -139,6 +139,7 @@ print(count_of_4)  # Output: 1
 # Sorting
 my_list.sort()
 print(my_list)  # Output: [1, 2, 3, 4, 5, 7, 8, 10]
+list.sort(reverse = True) # prints in descending order
 
 # Reversing
 my_list.reverse()
