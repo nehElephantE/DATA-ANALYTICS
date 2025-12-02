@@ -358,10 +358,25 @@ print('age' not in my_dict)     # Output: True
 my_dict.clear()
 print(my_dict)                  # Output: {}
 
+A dictionary can have key value pairs where value can be another dictionary or tuple or set
+
+dixt = {
+ "name" : ["neha","altaf"],
+"age" :(24,25)
+}
+
+
+-> d["key'] 
+this should return the value of the key but if the key is not present it throws error
+
+d.get("key")
+this also returns the value but if key is not present it doesn't throw error
+
 
 
 #################
 SETS
+-> ses are mutable kyuki we can add and remove elements but sets ke andar ke elements ko we cannot change isiliye list ya tupple we cannot add inside a set
 
 # Creating a set
 my_set = {1, 2, 3, 4, 5}
@@ -409,4 +424,381 @@ for rows in range(1, n+1):
     print("  "* (n-1),end="")
     print("*"* ((2*rows)-1),end="")
     print("")
+
+
+
+#####################
+FILE INPUT/OUTPUT
+
+# Syntax: open(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None)
+
+# Basic opening
+file = open('example.txt', 'r')
+# ... operations
+file.close()
+
+# Automatically closes the file
+with open('example.txt', 'r') as file:
+    # File operations here
+    content = file.read()
+# File is automatically closed here
+
+# Method 1: read()
+with open('example.txt', 'r') as file:
+    content = file.read()  # Reads entire file as string
+    print(content)
+
+# Method 2: readlines()
+with open('example.txt', 'r') as file:
+    lines = file.readlines()  # Returns list of lines
+    for line in lines:
+        print(line.strip())  # strip() removes newline characters
+
+# Method 1: Using file object as iterator (Memory efficient)
+with open('example.txt', 'r') as file:
+    for line in file:  # Reads one line at a time
+        print(f"Line: {line.strip()}")
+
+# Method 2: readline()
+with open('example.txt', 'r') as file:
+    line1 = file.readline()  # Read first line
+    line2 = file.readline()  # Read second line
+    # Continue as needed...
+
+with open('example.txt', 'r') as file:
+    # Read first 100 characters
+    chunk = file.read(100)
+    
+    # Read next 50 characters
+    chunk2 = file.read(50)
+
+with open('example.txt', 'r') as file:
+    # Get current position
+    position = file.tell()
+    print(f"Starting at position: {position}")
+    
+    # Read some data
+    data = file.read(50)
+    
+    # Move to a specific position
+    file.seek(0)  # Go to beginning
+    file.seek(10)  # Go to 10th byte
+    file.seek(0, 2)  # Go to end of file (2 means from end)
+
+# Writing to a new file (creates or overwrites)
+with open('output.txt', 'w') as file:
+    file.write("Hello, World!\n")
+    file.write("This is a new line.\n")
+    
+    # Writing multiple lines
+    lines = ["Line 1\n", "Line 2\n", "Line 3\n"]
+    file.writelines(lines)
+
+# Append to existing file (creates if doesn't exist)
+with open('output.txt', 'a') as file:
+    file.write("This is appended text.\n")
+    file.write("Another appended line.\n")
+
+Mode	Description	File Position
+'r'	Read only (default)	Beginning
+'w'	Write only (truncates if exists)	Beginning
+'a'	Append only	End
+'x'	Exclusive creation (fails if exists)	Beginning
+'r+'	Read and write	Beginning
+'w+'	Write and read (truncates if exists)	Beginning
+'a+'	Append and read	End
+'rb'	Read binary
+'wb'	Write binary
+'ab'	Append binary
+
+# Read mode (default)
+with open('file.txt', 'r') as f:  # or just open('file.txt')
+    pass
+
+# Write mode (creates new or overwrites)
+with open('file.txt', 'w') as f:
+    f.write("New content")
+
+# Append mode
+with open('file.txt', 'a') as f:
+    f.write("\nAppended content")
+
+# Read and write mode
+with open('file.txt', 'r+') as f:
+    content = f.read()
+    f.write("\nAdditional content")
+
+# Exclusive creation (fails if file exists)
+try:
+    with open('newfile.txt', 'x') as f:
+        f.write("Creating new file")
+except FileExistsError:
+    print("File already exists!")
+
+# Binary mode for images, PDFs, etc.
+with open('image.jpg', 'rb') as f:
+    binary_data = f.read()
+
+-> CSV
+import csv
+
+# Reading CSV
+with open('data.csv', 'r') as file:
+    csv_reader = csv.reader(file)
+    for row in csv_reader:
+        print(row)  # Each row is a list
+
+# Reading CSV as dictionary
+with open('data.csv', 'r') as file:
+    csv_reader = csv.DictReader(file)
+    for row in csv_reader:
+        print(row['column_name'])  # Access by column name
+
+# Writing CSV
+data = [['Name', 'Age', 'City'],
+        ['John', '25', 'New York'],
+        ['Alice', '30', 'London']]
+
+with open('output.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerows(data)
+
+# Writing CSV as dictionary
+fieldnames = ['Name', 'Age', 'City']
+data_dict = [{'Name': 'John', 'Age': '25', 'City': 'NY'},
+             {'Name': 'Alice', 'Age': '30', 'City': 'LDN'}]
+
+with open('output.csv', 'w', newline='') as file:
+    writer = csv.DictWriter(file, fieldnames=fieldnames)
+    writer.writeheader()
+    writer.writerows(data_dict)
+
+-> JSON
+import json
+
+# Writing JSON
+data = {
+    "name": "John",
+    "age": 30,
+    "city": "New York",
+    "hobbies": ["reading", "gaming"]
+}
+
+with open('data.json', 'w') as file:
+    json.dump(data, file, indent=4)  # indent for pretty printing
+
+# Reading JSON
+with open('data.json', 'r') as file:
+    loaded_data = json.load(file)
+    print(loaded_data['name'])
+
+# JSON string operations
+json_string = json.dumps(data)  # Convert dict to JSON string
+python_dict = json.loads(json_string)  # Convert JSON string to dict
+
+
+-> Text Files with Different Encodings
+# Specifying encoding
+with open('file.txt', 'r', encoding='utf-8') as file:
+    content = file.read()
+
+# Common encodings: utf-8, ascii, latin-1, cp1252
+# Handling encoding errors
+with open('file.txt', 'r', encoding='utf-8', errors='ignore') as file:
+    content = file.read()  # ignores invalid characters
+
+with open('file.txt', 'r', encoding='utf-8', errors='replace') as file:
+    content = file.read()  # replaces invalid chars with �
+
+
+->
+# Reading binary file
+with open('image.jpg', 'rb') as file:
+    binary_data = file.read()
+    # Process binary data...
+
+# Writing binary file
+with open('copy.jpg', 'wb') as file:
+    file.write(binary_data)
+
+# Working with binary chunks
+chunk_size = 1024  # 1KB chunks
+with open('large_file.bin', 'rb') as file:
+    while True:
+        chunk = file.read(chunk_size)
+        if not chunk:
+            break
+        # Process chunk
+
+
+->
+with open('example.txt', 'r+') as file:
+    # Check if file is readable/writable
+    print(f"Readable: {file.readable()}")
+    print(f"Writable: {file.writable()}")
+    
+    # Get file descriptor
+    print(f"File descriptor: {file.fileno()}")
+    
+    # Check if file is closed
+    print(f"Closed: {file.closed}")
+    
+    # Get file mode
+    print(f"Mode: {file.mode}")
+    
+    # Get file name
+    print(f"Name: {file.name}")
+    
+    # Flush buffer (force write to disk)
+    file.write("Some data")
+    file.flush()
+    
+# Check after with block
+print(f"Closed after with block: {file.closed}")
+
+
+->
+with open('example.txt', 'r+') as file:
+    # Write some data
+    file.write("Line 1\nLine 2\nLine 3\n")
+    
+    # Go to beginning
+    file.seek(0)
+    
+    # Read first 10 characters
+    print(file.read(10))
+    
+    # Get current position
+    pos = file.tell()
+    print(f"Current position: {pos}")
+    
+    # Go back 5 characters
+    file.seek(-5, 1)  # 1 means from current position
+    
+    # Truncate file (keep first 20 bytes)
+    file.truncate(20)
+
+
+->
+import mmap
+
+with open('large_file.bin', 'r+b') as file:
+    # Memory map the file
+    with mmap.mmap(file.fileno(), 0) as mm:
+        # Access like a bytearray
+        print(mm[:10])  # First 10 bytes
+        
+        # Modify data
+        mm[0:5] = b'HELLO'
+        
+        # Search within file
+        position = mm.find(b'search_string')
+
+-> Temporary FIles
+import tempfile
+
+# Create temporary file
+with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp:
+    tmp.write("Temporary data")
+    tmp_path = tmp.name  # Get file path
+
+# Create temporary directory
+with tempfile.TemporaryDirectory() as tmpdir:
+    print(f"Temporary directory: {tmpdir}")
+    # Create files in tmpdir
+
+
+-> File Locking
+import fcntl  # Unix/Linux only
+import os
+
+with open('file.txt', 'r+') as file:
+    # Lock the file
+    fcntl.flock(file.fileno(), fcntl.LOCK_EX)
+    
+    # Perform operations
+    file.write("Exclusive access")
+    
+    # Unlock (automatically when file closes)
+    fcntl.flock(file.fileno(), fcntl.LOCK_UN)
+
+
+-> Zip Files
+import gzip
+import zipfile
+
+# Gzip files
+with gzip.open('file.txt.gz', 'rt') as f:  # 't' for text mode
+    content = f.read()
+
+with gzip.open('file.txt.gz', 'wt') as f:
+    f.write("Compressed content")
+
+# Zip files
+with zipfile.ZipFile('archive.zip', 'r') as zipf:
+    # List contents
+    print(zipf.namelist())
+    
+    # Extract specific file
+    zipf.extract('file.txt', 'extract_dir/')
+    
+    # Read file without extracting
+    with zipf.open('file.txt') as f:
+        content = f.read()
+
+# Create zip file
+with zipfile.ZipFile('archive.zip', 'w') as zipf:
+    zipf.write('file1.txt')
+    zipf.write('file2.txt')
+
+
+-> Meta Data
+import os
+
+# Get file stats
+stats = os.stat('file.txt')
+print(f"Size: {stats.st_size} bytes")
+print(f"Last modified: {stats.st_mtime}")
+print(f"Last accessed: {stats.st_atime}")
+print(f"Creation time: {stats.st_ctime}")
+
+# Check file properties
+print(f"Exists: {os.path.exists('file.txt')}")
+print(f"Is file: {os.path.isfile('file.txt')}")
+print(f"Is directory: {os.path.isdir('file.txt')}")
+
+# Get absolute path
+abs_path = os.path.abspath('file.txt')
+print(f"Absolute path: {abs_path}")
+
+
+-> Monitoring
+import time
+import os
+
+def monitor_file(file_path):
+    """Monitor file for changes"""
+    last_modified = os.path.getmtime(file_path)
+    
+    while True:
+        time.sleep(1)  # Check every second
+        current_modified = os.path.getmtime(file_path)
+        
+        if current_modified != last_modified:
+            print(f"File {file_path} has been modified!")
+            last_modified = current_modified
+
+->
+from pathlib import Path
+
+p = Path("data.txt")
+
+# Read
+content = p.read_text()
+
+# Write
+p.write_text("Writing using pathlib")
+
+
+
 
