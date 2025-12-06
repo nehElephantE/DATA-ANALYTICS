@@ -802,3 +802,1099 @@ p.write_text("Writing using pathlib")
 
 
 
+############################################
+OOPS
+
+Four Pillars of OOP
+Encapsulation - Bundling data and methods
+Inheritance - Creating new classes from existing ones
+Polymorphism - Using a single interface for different types
+Abstraction - Hiding complex implementation details
+
+
+-> Defining a Class
+class Dog:
+    """A simple Dog class"""
+    
+    # Class attribute (shared by all instances)
+    species = "Canis familiaris"
+    
+    def __init__(self, name, age):
+        """Constructor/Initializer"""
+        # Instance attributes (unique to each instance)
+        self.name = name
+        self.age = age
+    
+    def bark(self):
+        """Instance method"""
+        return f"{self.name} says Woof!"
+    
+    def get_info(self):
+        """Another instance method"""
+        return f"{self.name} is {self.age} years old"
+
+
+-> Creating Objects (Instances)
+# Creating instances
+dog1 = Dog("Buddy", 3)
+dog2 = Dog("Max", 5)
+
+# Accessing attributes
+print(dog1.name)          # Buddy
+print(dog2.age)           # 5
+print(Dog.species)        # Canis familiaris (class attribute)
+
+# Calling methods
+print(dog1.bark())        # Buddy says Woof!
+print(dog2.get_info())    # Max is 5 years old
+
+# Modifying attributes
+dog1.age = 4
+dog1.breed = "Golden Retriever"  # Can add attributes dynamically
+
+# Checking instance
+print(isinstance(dog1, Dog))      # True
+print(type(dog1))                 # <class '__main__.Dog'>
+
+
+class Person:
+    def __init__(self, name):
+        self.name = name
+    
+    def greet(self):
+        return f"Hello, I'm {self.name}"
+
+p = Person("Alice")
+# These are equivalent:
+print(p.greet())           # Python converts this to:
+print(Person.greet(p))     # Explicitly passing instance
+
+
+-> Constructors and Initialization <a name="constructors"></a>
+class Rectangle:
+    def __init__(self, width, height):
+        """Called when creating new instance"""
+        self.width = width
+        self.height = height
+        self.area = width * height  # Can compute during init
+
+rect = Rectangle(10, 5)
+print(rect.area)  # 50
+
+
+class Singleton:
+    _instance = None
+    
+    def __new__(cls, *args, **kwargs):
+        """Called before __init__, creates the instance"""
+        if not cls._instance:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+    
+    def __init__(self, value):
+        if not hasattr(self, 'initialized'):
+            self.value = value
+            self.initialized = True
+
+s1 = Singleton(10)
+s2 = Singleton(20)
+print(s1 is s2)  # True (same instance)
+print(s1.value)  # 10 (first init preserved)
+
+
+
+-> Multiple Constructors (Using Class Methods)
+class Date:
+    def __init__(self, year, month, day):
+        self.year = year
+        self.month = month
+        self.day = day
+    
+    @classmethod
+    def from_string(cls, date_string):
+        """Alternative constructor"""
+        year, month, day = map(int, date_string.split('-'))
+        return cls(year, month, day)
+    
+    @classmethod
+    def today(cls):
+        """Another alternative constructor"""
+        import datetime
+        today = datetime.date.today()
+        return cls(today.year, today.month, today.day)
+
+# Different ways to create instances
+d1 = Date(2024, 1, 15)
+d2 = Date.from_string("2024-01-15")
+d3 = Date.today()
+
+
+-> Class Attributes vs Instance Attributes <a name="attributes"></a>
+class Employee:
+    # Class attribute (shared)
+    company = "Tech Corp"
+    employee_count = 0
+    
+    def __init__(self, name, salary):
+        # Instance attributes (unique)
+        self.name = name
+        self.salary = salary
+        Employee.employee_count += 1  # Modify class attribute
+    
+    def display(self):
+        print(f"{self.name} works at {self.company}")
+
+# Usage
+e1 = Employee("Alice", 50000)
+e2 = Employee("Bob", 60000)
+
+print(Employee.company)      # Tech Corp
+print(e1.company)           # Tech Corp
+print(e2.company)           # Tech Corp
+
+# Modifying class attribute affects all instances
+Employee.company = "New Corp"
+print(e1.company)           # New Corp
+print(e2.company)           # New Corp
+
+# Instance attribute shadows class attribute
+e1.company = "Individual Corp"
+print(e1.company)           # Individual Corp (instance)
+print(e2.company)           # New Corp (class)
+print(Employee.company)     # New Corp
+
+print(f"Total employees: {Employee.employee_count}")  # 2
+
+
+-> Namespace Resolution Order
+class MyClass:
+    class_var = "Class Variable"
+    
+    def __init__(self):
+        self.instance_var = "Instance Variable"
+    
+    def show(self):
+        print(self.instance_var)  # Instance first
+        print(self.class_var)     # Then class
+        print(MyClass.class_var)  # Direct class access
+
+obj = MyClass()
+obj.show()
+
+
+-> Instance Methods
+class BankAccount:
+    def __init__(self, balance=0):
+        self.balance = balance
+    
+    # Instance method - operates on instance
+    def deposit(self, amount):
+        self.balance += amount
+        return self.balance
+    
+    def withdraw(self, amount):
+        if amount <= self.balance:
+            self.balance -= amount
+            return amount
+        return "Insufficient funds"
+
+account = BankAccount(100)
+print(account.deposit(50))   # 150
+print(account.withdraw(30))  # 30
+
+
+-> Class Methods
+class Pizza:
+    sizes = ["small", "medium", "large"]
+    
+    def __init__(self, toppings, size="medium"):
+        self.toppings = toppings
+        self.size = size
+    
+    @classmethod
+    def validate_size(cls, size):
+        """Class method - works with class, not instance"""
+        if size not in cls.sizes:
+            raise ValueError(f"Size must be one of {cls.sizes}")
+        return size
+    
+    @classmethod
+    def cheese_pizza(cls, size="medium"):
+        """Factory method - creates instances"""
+        return cls(["cheese"], size)
+
+# Using class method without instance
+print(Pizza.validate_size("large"))  # large
+
+# Factory method
+pizza = Pizza.cheese_pizza("large")
+
+
+-> Static Methods
+class MathOperations:
+    @staticmethod
+    def add(x, y):
+        """Static method - no self or cls parameter"""
+        return x + y
+    
+    @staticmethod
+    def multiply(x, y):
+        return x * y
+
+# Can be called on class or instance
+print(MathOperations.add(5, 3))       # 8
+math = MathOperations()
+print(math.multiply(5, 3))           # 15
+
+
+-> Inheritance <a name="inheritance"></a>
+class Animal:
+    def __init__(self, name):
+        self.name = name
+    
+    def speak(self):
+        return "Some sound"
+    
+    def move(self):
+        return f"{self.name} is moving"
+
+class Dog(Animal):  # Dog inherits from Animal
+    def __init__(self, name, breed):
+        super().__init__(name)  # Call parent constructor
+        self.breed = breed
+    
+    def speak(self):  # Method overriding
+        return "Woof!"
+    
+    def fetch(self):  # New method
+        return f"{self.name} is fetching"
+
+class Cat(Animal):
+    def speak(self):
+        return "Meow!"
+
+# Usage
+animal = Animal("Generic")
+dog = Dog("Buddy", "Golden Retriever")
+cat = Cat("Whiskers")
+
+print(animal.speak())  # Some sound
+print(dog.speak())     # Woof!
+print(cat.speak())     # Meow!
+print(dog.move())      # Buddy is moving (inherited)
+print(dog.fetch())     # Buddy is fetching (specific to Dog)
+
+
+
+class Parent:
+    def __init__(self, value):
+        self.value = value
+    
+    def show(self):
+        print(f"Parent value: {self.value}")
+
+class Child(Parent):
+    def __init__(self, value, extra):
+        super().__init__(value)  # Call parent's __init__
+        self.extra = extra
+    
+    def show(self):
+        super().show()  # Call parent's show()
+        print(f"Child extra: {self.extra}")
+
+child = Child(10, "extra")
+child.show()
+
+
+class A: pass
+class B(A): pass
+class C(B): pass
+
+obj = C()
+
+print(isinstance(obj, C))     # True
+print(isinstance(obj, B))     # True
+print(isinstance(obj, A))     # True
+
+print(issubclass(C, B))       # True
+print(issubclass(C, A))       # True
+print(issubclass(B, A))       # True
+print(issubclass(A, C))       # False
+
+
+-> Polymorphism <a name="polymorphism"></a>
+-> Method Overriding
+class Shape:
+    def area(self):
+        raise NotImplementedError("Subclasses must implement area()")
+
+class Rectangle(Shape):
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+    
+    def area(self):
+        return self.width * self.height
+
+class Circle(Shape):
+    def __init__(self, radius):
+        self.radius = radius
+    
+    def area(self):
+        return 3.14159 * self.radius ** 2
+
+# Polymorphic behavior
+shapes = [Rectangle(5, 4), Circle(3), Rectangle(2, 3)]
+
+for shape in shapes:
+    print(f"Area: {shape.area()}")
+# Output: Area: 20, Area: 28.27431, Area: 6
+
+
+-> Operator Overloading
+class Vector:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+    
+    def __add__(self, other):
+        """Overload + operator"""
+        return Vector(self.x + other.x, self.y + other.y)
+    
+    def __mul__(self, scalar):
+        """Overload * operator"""
+        return Vector(self.x * scalar, self.y * scalar)
+    
+    def __str__(self):
+        return f"Vector({self.x}, {self.y})"
+
+v1 = Vector(2, 3)
+v2 = Vector(4, 5)
+
+v3 = v1 + v2  # Uses __add__
+v4 = v1 * 3   # Uses __mul__
+
+print(v3)  # Vector(6, 8)
+print(v4)  # Vector(6, 9)
+
+
+-> Duck Typing
+class Dog:
+    def speak(self):
+        return "Woof!"
+
+class Cat:
+    def speak(self):
+        return "Meow!"
+
+class Car:
+    def speak(self):
+        return "Vroom!"
+
+def make_sound(obj):
+    """Works with any object that has speak() method"""
+    return obj.speak()
+
+# All work because they have speak() method
+print(make_sound(Dog()))  # Woof!
+print(make_sound(Cat()))  # Meow!
+print(make_sound(Car()))  # Vroom!
+
+
+
+-> Encapsulation 
+class BankAccount:
+    def __init__(self, balance):
+        # Single underscore: "protected" (convention only)
+        self._balance = balance
+        
+        # Double underscore: "private" (name mangling)
+        self.__secret_pin = 1234
+    
+    def get_balance(self):
+        return self._balance
+    
+    def __get_secret(self):
+        return self.__secret_pin
+
+account = BankAccount(1000)
+
+# Can still access (but shouldn't)
+print(account._balance)            # 1000 (convention warns you)
+
+# Name mangling makes it harder
+# print(account.__secret_pin)      # AttributeError
+print(account._BankAccount__secret_pin)  # 1234 (but don't do this!)
+
+# print(account.__get_secret())    # AttributeError
+
+
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self._age = age  # Protected attribute
+    
+    @property
+    def age(self):
+        """Getter"""
+        return self._age
+    
+    @age.setter
+    def age(self, value):
+        """Setter with validation"""
+        if value < 0:
+            raise ValueError("Age cannot be negative")
+        self._age = value
+    
+    @age.deleter
+    def age(self):
+        """Deleter"""
+        print("Deleting age...")
+        del self._age
+
+person = Person("Alice", 25)
+
+# Using as property (not method)
+print(person.age)      # 25 (calls getter)
+
+person.age = 30        # Calls setter
+print(person.age)      # 30
+
+# person.age = -5      # ValueError: Age cannot be negative
+
+del person.age         # Calls deleter
+
+
+
+class Temperature:
+    def __init__(self, celsius=0):
+        self._celsius = celsius
+    
+    @property
+    def celsius(self):
+        return self._celsius
+    
+    @celsius.setter
+    def celsius(self, value):
+        if value < -273.15:
+            raise ValueError("Temperature below absolute zero")
+        self._celsius = value
+    
+    @property
+    def fahrenheit(self):
+        """Read-only property"""
+        return (self._celsius * 9/5) + 32
+    
+    @property
+    def kelvin(self):
+        """Read-only property"""
+        return self._celsius + 273.15
+
+temp = Temperature(25)
+print(temp.celsius)      # 25
+print(temp.fahrenheit)   # 77.0
+print(temp.kelvin)       # 298.15
+
+temp.celsius = 100       # Works
+# temp.fahrenheit = 212  # AttributeError (no setter)
+
+
+
+from abc import ABC, abstractmethod
+
+class Flyable(ABC):
+    @abstractmethod
+    def fly(self):
+        pass
+
+class Swimmable(ABC):
+    @abstractmethod
+    def swim(self):
+        pass
+
+class Walkable(ABC):
+    @abstractmethod
+    def walk(self):
+        pass
+
+class Duck(Flyable, Swimmable, Walkable):
+    def fly(self):
+        return "Duck flying"
+    
+    def swim(self):
+        return "Duck swimming"
+    
+    def walk(self):
+        return "Duck walking"
+
+class Fish(Swimmable):
+    def swim(self):
+        return "Fish swimming"
+
+duck = Duck()
+fish = Fish()
+
+print(duck.fly())   # Duck flying
+print(fish.swim())  # Fish swimming
+# fish.fly()        # AttributeError
+
+
+
+-> Common Dunder Methods
+class Book:
+    def __init__(self, title, author, pages):
+        self.title = title
+        self.author = author
+        self.pages = pages
+    
+    # String representation
+    def __str__(self):
+        return f"'{self.title}' by {self.author}"
+    
+    def __repr__(self):
+        return f"Book('{self.title}', '{self.author}', {self.pages})"
+    
+    # Length
+    def __len__(self):
+        return self.pages
+    
+    # Comparison
+    def __eq__(self, other):
+        return self.title == other.title and self.author == other.author
+    
+    def __lt__(self, other):
+        return self.pages < other.pages
+    
+    # Callable
+    def __call__(self):
+        return f"Reading {self.title}..."
+    
+    # Container behavior
+    def __getitem__(self, key):
+        if key == 'title':
+            return self.title
+        elif key == 'author':
+            return self.author
+        elif key == 'pages':
+            return self.pages
+        raise KeyError(f"No attribute {key}")
+
+book1 = Book("Python Basics", "John Doe", 300)
+book2 = Book("Advanced Python", "Jane Smith", 500)
+
+print(str(book1))      # 'Python Basics' by John Doe
+print(repr(book1))     # Book('Python Basics', 'John Doe', 300)
+print(len(book1))      # 300
+print(book1 == book2)  # False
+print(book1 < book2)   # True
+print(book1())         # Reading Python Basics...
+print(book1['title'])  # Python Basics
+
+
+
+->Context Manager (__enter__, __exit__)
+class DatabaseConnection:
+    def __init__(self, db_name):
+        self.db_name = db_name
+        self.connection = None
+    
+    def __enter__(self):
+        """Called when entering with block"""
+        print(f"Connecting to {self.db_name}...")
+        self.connection = f"Connection to {self.db_name}"
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Called when exiting with block"""
+        print(f"Closing connection to {self.db_name}...")
+        self.connection = None
+        if exc_type:
+            print(f"Exception occurred: {exc_type}")
+        # Return True to suppress exception
+        return False
+    
+    def execute(self, query):
+        print(f"Executing: {query}")
+        return "Query result"
+
+# Usage as context manager
+with DatabaseConnection("mydb") as db:
+    result = db.execute("SELECT * FROM users")
+    print(result)
+# Automatically closes connection
+
+
+
+class Person:
+    def __init__(self, first_name, last_name):
+        self.first_name = first_name
+        self.last_name = last_name
+    
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}"
+    
+    def set_full_name(self, name):
+        first, last = name.split(" ")
+        self.first_name = first
+        self.last_name = last
+    
+    def del_full_name(self):
+        self.first_name = None
+        self.last_name = None
+    
+    # Create property using property() function
+    full_name = property(get_full_name, set_full_name, del_full_name)
+
+p = Person("John", "Doe")
+print(p.full_name)          # John Doe
+
+p.full_name = "Jane Smith"
+print(p.first_name)         # Jane
+print(p.last_name)          # Smith
+
+del p.full_name
+print(p.first_name)         # None
+
+
+
+class Circle:
+    def __init__(self, radius):
+        self.radius = radius
+        self._area = None  # Cache
+    
+    @property
+    def area(self):
+        if self._area is None:
+            print("Calculating area...")
+            self._area = 3.14159 * self.radius ** 2
+        return self._area
+
+circle = Circle(5)
+print(circle.area)  # Calculating area... 78.53975
+print(circle.area)  # 78.53975 (cached, no calculation)
+circle.radius = 10
+print(circle.area)  # 78.53975 (still old value - cache issue!)
+
+
+class Circle:
+    def __init__(self, radius):
+        self._radius = radius
+        self._area = None
+    
+    @property
+    def radius(self):
+        return self._radius
+    
+    @radius.setter
+    def radius(self, value):
+        self._radius = value
+        self._area = None  # Invalidate cache
+    
+    @property
+    def area(self):
+        if self._area is None:
+            print("Calculating area...")
+            self._area = 3.14159 * self._radius ** 2
+        return self._area
+
+circle = Circle(5)
+print(circle.area)     # Calculating area... 78.53975
+print(circle.area)     # 78.53975 (cached)
+circle.radius = 10     # Invalidates cache
+print(circle.area)     # Calculating area... 314.159 (recalculated)
+
+
+-> Multiple Inheritance
+class Flyable:
+    def fly(self):
+        return "Flying"
+    
+    def move(self):
+        return "Moving through air"
+
+class Swimmable:
+    def swim(self):
+        return "Swimming"
+    
+    def move(self):
+        return "Moving through water"
+
+class Duck(Flyable, Swimmable):
+    def quack(self):
+        return "Quack!"
+    
+    # Override if needed
+    def move(self):
+        return "Waddling"
+
+duck = Duck()
+print(duck.fly())     # Flying
+print(duck.swim())    # Swimming
+print(duck.quack())   # Quack!
+print(duck.move())    # Waddling (from Duck)
+
+
+-> Method Resolution Order (MRO)
+class A:
+    def method(self):
+        return "A"
+
+class B(A):
+    def method(self):
+        return "B"
+
+class C(A):
+    def method(self):
+        return "C"
+
+class D(B, C):
+    pass
+
+d = D()
+print(d.method())               # B (MRO: D -> B -> C -> A)
+print(D.__mro__)                # (<class '__main__.D'>, <class '__main__.B'>, 
+                                #  <class '__main__.C'>, <class '__main__.A'>, <class 'object'>)
+print(D.mro())                  # Same as above
+
+# Diamond Problem Solution
+class Base:
+    def method(self):
+        return "Base"
+
+class Left(Base):
+    def method(self):
+        return "Left"
+
+class Right(Base):
+    def method(self):
+        return "Right"
+
+class Child(Left, Right):
+    pass
+
+c = Child()
+print(c.method())               # Left (MRO: Child -> Left -> Right -> Base)
+print(Child.__mro__)
+
+
+-> super() with Multiple Inheritance
+class A:
+    def __init__(self):
+        print("A init")
+        super().__init__()
+
+class B:
+    def __init__(self):
+        print("B init")
+        super().__init__()
+
+class C(A, B):
+    def __init__(self):
+        print("C init")
+        super().__init__()
+
+c = C()
+# Output:
+# C init
+# A init
+# B init
+
+print(C.__mro__)  # C -> A -> B -> object
+
+
+
+-> Abstract Base Classes (ABC)
+from abc import ABC, abstractmethod, abstractproperty
+
+class Shape(ABC):
+    @abstractmethod
+    def area(self):
+        pass
+    
+    @abstractmethod
+    def perimeter(self):
+        pass
+    
+    @abstractproperty
+    def name(self):
+        pass
+    
+    def describe(self):
+        return f"This is a {self.name}"
+
+class Rectangle(Shape):
+    def __init__(self, width, height):
+        self._width = width
+        self._height = height
+    
+    @property
+    def name(self):
+        return "Rectangle"
+    
+    def area(self):
+        return self._width * self._height
+    
+    def perimeter(self):
+        return 2 * (self._width + self._height)
+
+class Circle(Shape):
+    def __init__(self, radius):
+        self._radius = radius
+    
+    @property
+    def name(self):
+        return "Circle"
+    
+    def area(self):
+        return 3.14159 * self._radius ** 2
+    
+    def perimeter(self):
+        return 2 * 3.14159 * self._radius
+
+shapes = [Rectangle(4, 5), Circle(3)]
+for shape in shapes:
+    print(f"{shape.name}: Area={shape.area()}, Perimeter={shape.perimeter()}")
+
+
+
+-> Registering Classes as Virtual Subclasses
+from abc import ABC
+
+class Animal(ABC):
+    @abstractmethod
+    def speak(self):
+        pass
+
+class Dog:  # Doesn't inherit from Animal
+    def speak(self):
+        return "Woof!"
+
+# Register Dog as a virtual subclass
+Animal.register(Dog)
+
+print(issubclass(Dog, Animal))  # True
+print(isinstance(Dog(), Animal))  # True
+
+# But doesn't enforce implementation
+class Cat:
+    pass
+
+Animal.register(Cat)
+cat = Cat()
+# cat.speak()  # AttributeError - no enforcement
+
+
+
+-> Object Creation and Destruction
+class Resource:
+    def __new__(cls, *args, **kwargs):
+        print(f"__new__ called with {args}")
+        instance = super().__new__(cls)
+        return instance
+    
+    def __init__(self, name):
+        print(f"__init__ called with {name}")
+        self.name = name
+    
+    def __del__(self):
+        print(f"__del__ called for {self.name}")
+
+res = Resource("MyResource")
+del res  # Triggers __del__
+
+
+
+-> Attribute Access
+class Config:
+    def __init__(self):
+        self._data = {}
+    
+    def __getattr__(self, name):
+        """Called when attribute not found"""
+        if name in self._data:
+            return self._data[name]
+        raise AttributeError(f"No config '{name}'")
+    
+    def __setattr__(self, name, value):
+        """Called when setting any attribute"""
+        if name.startswith('_'):
+            super().__setattr__(name, value)
+        else:
+            self._data[name] = value
+    
+    def __getitem__(self, key):
+        """Allows dict-like access"""
+        return self._data[key]
+    
+    def __setitem__(self, key, value):
+        self._data[key] = value
+
+config = Config()
+config.host = "localhost"      # Uses __setattr__
+config.port = 8080
+print(config.host)             # Uses __getattr__
+print(config['port'])          # Uses __getitem__
+
+
+->Context Manager with Error Handling
+class FileHandler:
+    def __init__(self, filename, mode):
+        self.filename = filename
+        self.mode = mode
+        self.file = None
+    
+    def __enter__(self):
+        self.file = open(self.filename, self.mode)
+        return self.file
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.file:
+            self.file.close()
+        
+        # Handle specific exceptions
+        if exc_type is IOError:
+            print(f"IOError occurred: {exc_val}")
+            return True  # Suppress the exception
+        
+        # Return False to propagate other exceptions
+        return False
+
+# Usage
+try:
+    with FileHandler("nonexistent.txt", "r") as f:
+        content = f.read()
+except IOError:
+    print("Exception was suppressed in __exit__")
+
+
+-> Callable Objects
+class Adder:
+    def __init__(self, n):
+        self.n = n
+    
+    def __call__(self, x):
+        return self.n + x
+
+add5 = Adder(5)
+print(add5(10))      # 15 (instance is callable)
+print(callable(add5))  # True
+
+# Can be used as decorator
+class Counter:
+    def __init__(self, func):
+        self.func = func
+        self.count = 0
+    
+    def __call__(self, *args, **kwargs):
+        self.count += 1
+        print(f"Function called {self.count} times")
+        return self.func(*args, **kwargs)
+
+@Counter
+def greet(name):
+    return f"Hello, {name}"
+
+print(greet("Alice"))
+print(greet("Bob"))
+
+
+
+-> Metaclasses 
+class Meta(type):
+    """Metaclass that adds attributes to classes"""
+    def __new__(cls, name, bases, dct):
+        # Add a class attribute to all classes using this metaclass
+        dct['created_by_meta'] = True
+        return super().__new__(cls, name, bases, dct)
+    
+    def __init__(cls, name, bases, dct):
+        super().__init__(name, bases, dct)
+        # Register class in a registry
+        if not hasattr(cls, 'registry'):
+            cls.registry = []
+        cls.registry.append(cls)
+
+class MyClass(metaclass=Meta):
+    pass
+
+print(MyClass.created_by_meta)  # True
+print(MyClass.registry)         # [<class '__main__.MyClass'>]
+
+
+
+-> Singleton using Metaclass
+class SingletonMeta(type):
+    _instances = {}
+    
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super().__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+class Database(metaclass=SingletonMeta):
+    def __init__(self, connection_string):
+        self.connection_string = connection_string
+
+db1 = Database("mysql://localhost")
+db2 = Database("postgres://localhost")
+print(db1 is db2)           # True
+print(db1.connection_string)  # mysql://localhost
+
+
+-> Validation Metaclass
+class ValidateFieldsMeta(type):
+    def __new__(cls, name, bases, dct):
+        # Check if class has required fields
+        required_fields = dct.get('required_fields', [])
+        
+        # Add validation to __init__
+        original_init = dct.get('__init__')
+        
+        def new_init(self, *args, **kwargs):
+            if original_init:
+                original_init(self, *args, **kwargs)
+            
+            # Validate required fields
+            for field in required_fields:
+                if not hasattr(self, field) or getattr(self, field) is None:
+                    raise ValueError(f"{field} is required")
+        
+        dct['__init__'] = new_init
+        return super().__new__(cls, name, bases, dct)
+
+class Person(metaclass=ValidateFieldsMeta):
+    required_fields = ['name', 'age']
+    
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+# Valid
+p1 = Person("Alice", 25)
+
+# Invalid - will raise ValueError
+# p2 = Person(None, 25)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
