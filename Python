@@ -103,6 +103,7 @@ i cannot assign values with index positions
 
 ###############
 LISTS
+-> can be changed - mutable
 
 # Create a list
 my_list = [1, 2, 3, 4, 5]
@@ -206,55 +207,38 @@ for i in range(0,3):
     neha = list(map(int,input().split()))     // takes in int input
 print(neha)
 
+
+
 // nested list to a normal list
-flatList = [element for innerList in lis for element in innerList]
+l = [[1, 2], [3, 4]]
+
+flat_list = sum(l, [])
+print(flat_list)  # [1, 2, 3, 4]
 
 
-// PROGRAM - 1
-m = int(input())
-n = int(input())
+l = [[1, 2], [3, 4]]
 
-total = (2*m)+(2*n)
-arr = []
-
-for i in range(0,m+n):
-    neha = list(map(int,input().split()))
-    arr.append(neha)
-print(arr)
-
-def Sort(sub_li):
-    l = len(sub_li)
-    for i in range(0, l):
-        for j in range(0, l-i-1):
-            if (sub_li[j][1] < sub_li[j + 1][1]):
-                tempo = sub_li[j]
-                sub_li[j]= sub_li[j + 1]
-                sub_li[j + 1]= tempo
-    return sub_li
-
-arr = Sort(arr)
-print(arr)
-
-latest = list(dict((x[0],x) for x in sorted(arr, key=len,reverse= False)).values())
-
-print(latest)
-
-latest = [element for innerList in latest for element in innerList]
-print(latest)
+# Flatten using list comprehension
+flat_list = [item for sublist in l for item in sublist]
+print(flat_list)  # [1, 2, 3, 4]
+for sublist in l ← Outer loop
+for item in sublist ← Inner loop
+item ← What to collect
 
 
-latest = [latest[i:i+2] for i in range(0, len(latest), 2)]
-print(latest)
+def flatten(lst):
+    flat_list = []
+    for item in lst:
+        if isinstance(item, list):
+            flat_list.extend(flatten(item))
+        else:
+            flat_list.append(item)
+    return flat_list
 
-l = []
+# Test with deeply nested list
+deep_list = [[1, 2], [3, [4, 5]], [6, [7, [8, 9]]]]
+print(flatten(deep_list))  # [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-for i in latest:
-    l.insert(0, i)
-print(l)
-
-
-for i in l:
-        print(*i
 
 
 ####################
@@ -376,7 +360,8 @@ this also returns the value but if key is not present it doesn't throw error
 
 #################
 SETS
--> ses are mutable kyuki we can add and remove elements but sets ke andar ke elements ko we cannot change isiliye list ya tupple we cannot add inside a set
+-> sets are mutable kyuki we can add and remove elements but sets ke andar ke elements ko we cannot change isiliye list ya tupple we cannot add inside a set
+-> duplicate items ni store kar sake
 
 # Creating a set
 my_set = {1, 2, 3, 4, 5}
@@ -413,17 +398,6 @@ a.add(20)
 a.add(20.0)
 a.add("20:)
 print(len(a))   // return 2 as it compares the numerical value so for int and float its same and since its set so no duplicate values allowed hence len = 2
-
-
-##################
-PRINTING
-
-n = int(input())
-
-for rows in range(1, n+1):
-    print("  "* (n-1),end="")
-    print("*"* ((2*rows)-1),end="")
-    print("")
 
 
 
