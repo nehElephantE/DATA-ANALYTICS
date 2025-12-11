@@ -1045,4 +1045,32 @@ No join dependencies
 
 
 ##############################
-VIEWS
+BROADCAST JOIN
+A Broadcast Join is an optimization technique used in distributed computing frameworks (like Apache Spark) where the smaller of two tables is copied and
+sent to every worker node that holds a part of the larger table, allowing the join to happen locally without shuffling the larger table.
+
+Imagine you have two large tables in a distributed system:
+orders (a huge table, partitioned across 100 machines)
+customers (a medium-sized table, also partitioned across 100 machines)
+
+If you want to join them on customer_id, the system needs to get all rows with the same customer_id onto the same machine. To do this, it performs a shuffle:
+Each node looks at its data.
+It sends each row to a different node based on a hash of the customer_id.
+This involves moving massive amounts of data over the network, which is very slow and expensive.
+
+A broadcast join works as follows:
+The driver node (the coordinator) identifies the small table (e.g., customers).
+It collects this entire small table and sends a copy of it to every single worker node that holds a partition of the large orders table.
+Now, each worker node has:
+Locally: Its own slice of the massive orders table.
+Locally: A full copy of the entire customers table.
+Each worker can now perform the join locally on its own machine, without needing to shuffle any data for the large orders table. This is extremely fast.
+
+Think of a teacher with 30 students:
+Shuffle Method:
+"Everyone stand up and find the person with matching test answers" → chaos!
+Broadcast Method:
+Teacher gives everyone an answer key
+"Check your work against this key" → fast and organized!
+Broadcast Join is like giving every worker the "answer key" (small table) so they don't need to talk to each other.
+
